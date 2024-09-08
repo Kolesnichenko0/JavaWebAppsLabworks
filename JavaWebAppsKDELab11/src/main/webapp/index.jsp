@@ -2,12 +2,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>JSP - Hello World</title>
+  <title>KDE - Hello World</title>
 </head>
 <body>
-<h1><%= "Hello WEB World!" %></h1>
-<h2>Kolesnychenko Denys Yevhenovych</h2>
-<h3>CS-222a, SEMIT department</h3>
-<h4>Group list number: 11</h4>
+<h1><%= "Hello WEB World!" %></h1><br>
+<h2>Kolesnychenko Denys Yevhenovych</h2><br>
+<h3>CS-222a, SEMIT department</h3><br>
+<h4>Group list number: 11</h4><br>
 </body>
 </html>
