@@ -30,14 +30,17 @@ public class ShowTableServlet extends HttpServlet {
 
     /**
      * Handles the HTTP GET method.
-     * It retrieves the list of employees and forwards the request and response objects to the table page.
+     * It retrieves the list of employees and forwards the request and response objects
+     * to the table page.
      *
      * @param request  the request object that contains client request data
      * @param response the response object to assist in sending a response to the client
-     * @throws ServletException if an input or output error is detected when the servlet handles the GET request
+     * @throws ServletException if an input or output error is detected when the servlet
+     *                          handles the GET request
      * @throws IOException      if the request for the GET could not be handled
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         EmployeeList employeeList = EmployeeList.getInstance();
         request.setAttribute("employeeList", employeeList);
         request.getRequestDispatcher(TABLE_JSP_PATH).forward(request, response);

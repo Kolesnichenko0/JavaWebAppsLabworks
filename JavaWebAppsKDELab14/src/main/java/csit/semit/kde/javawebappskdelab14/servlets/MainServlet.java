@@ -32,10 +32,12 @@ public class MainServlet extends HttpServlet {
      *
      * @param request  the request object that contains client request data
      * @param response the response object to assist in sending a response to the client
-     * @throws ServletException if an input or output error is detected when the servlet handles the GET request
+     * @throws ServletException if an input or output error is detected when the servlet
+     *                          handles the GET request
      * @throws IOException      if the request for the GET could not be handled
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.getRequestDispatcher(MAIN_JSP_PATH).forward(request, response);
     }
 
