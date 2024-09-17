@@ -12,7 +12,7 @@ import java.io.IOException;
  * It extends {@link jakarta.servlet.http.HttpServlet} and is mapped to the "/redirect-to-table" URL.
  *
  * The class overrides the {@link #doGet(HttpServletRequest, HttpServletResponse)} and {@link #doPost(HttpServletRequest, HttpServletResponse)} methods to handle GET and POST requests.
- * Both methods redirect the client to the "/table.html" URL.
+ * Both methods redirect the client to the "/MyTable.html" URL.
  *
  * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @see jakarta.servlet.http.HttpServlet
@@ -28,7 +28,7 @@ public class RedirectToTableServlet extends HttpServlet {
      */
     @Override
     public void init() {
-        tablePath = getServletContext().getContextPath() + "/table.html";
+        tablePath = getServletContext().getContextPath() + "/MyTable.html";
     }
     /**
      * Handles a GET request to redirect the client to a HTML table of employees.

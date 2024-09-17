@@ -15,7 +15,7 @@ import java.io.IOException;
  * It extends {@link jakarta.servlet.http.HttpServlet} and is mapped to the "/forward-to-table" URL.
  * <p>
  * The class overrides the {@link #doGet(HttpServletRequest, HttpServletResponse)} and {@link #doPost(HttpServletRequest, HttpServletResponse)} methods to handle GET and POST requests.
- * Both methods forward the client to the "/table.html" URL.
+ * Both methods forward the client to the "/MyTable.html" URL.
  *
  * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @see jakarta.servlet.http.HttpServlet
@@ -24,7 +24,7 @@ import java.io.IOException;
 @WebServlet("/forward-to-table")
 public class ForwardToTableServlet extends HttpServlet {
 
-    private static final String TABLE_PATH = "/table.html";
+    private static final String TABLE_PATH = "/MyTable.html";
     /**
      * Handles a GET request to forward the client to a HTML table of employees.
      *
