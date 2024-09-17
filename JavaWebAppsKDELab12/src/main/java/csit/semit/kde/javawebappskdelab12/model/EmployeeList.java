@@ -2,6 +2,24 @@ package csit.semit.kde.javawebappskdelab12.model;
 
 import java.util.ArrayList;
 
+/**
+ * The {@code EmployeeList} class represents a list of employees in a company.
+ * It extends {@link java.util.ArrayList} and is used to manage a list of {@link Employee} objects.
+ * <p>
+ * The class is a singleton, meaning there can only be one instance of it in the application.
+ * The instance can be accessed using the {@link #getInstance()} method.
+ * <p>
+ * The class provides a method to get a HTML table representation of the list of employees.
+ * <p>
+ * Original code provided by: Dvukhhlavov Dmytro Eduardovych
+ * Changes made by: Your Name
+ *
+ * @author Dvukhhlavov Dmytro Eduardovych SEMIT department,
+ * Kolesnychenko Denys Yevhenovych CS-222a
+ * @see ProgramLanguages
+ * @see Employee
+ * @since 1.0.0
+ */
 public class EmployeeList extends ArrayList<Employee> {
     private static final long serialVersionUID = 1L;
     private static EmployeeList instance;
@@ -9,6 +27,12 @@ public class EmployeeList extends ArrayList<Employee> {
     private EmployeeList() {
     }
 
+    /**
+     * Returns the singleton instance of the {@code EmployeeList} class.
+     * If the instance does not exist, it is created and populated with a default list of employees.
+     *
+     * @return The singleton instance of the {@code EmployeeList} class.
+     */
     public static EmployeeList getInstance() {
         if (instance == null) {
             instance = new EmployeeList();
@@ -28,8 +52,13 @@ public class EmployeeList extends ArrayList<Employee> {
         return instance;
     }
 
+    /**
+     * Returns a HTML table representation of the list of employees.
+     *
+     * @return A string representing a HTML table of the employees' details, including their name, birthday, gender, salary, programming language, and importance level.
+     */
     public String toHtmlTable() {
-        StringBuilder sb = new StringBuilder("<table border=\"1\" cellpadding=\"5\" cellspacing=\"0\">");
+        StringBuilder sb = new StringBuilder("<table style=\"border: 1px solid black; border-collapse: collapse;\">");
 
         sb.append("<thead>");
         sb.append("<tr>");
@@ -52,5 +81,4 @@ public class EmployeeList extends ArrayList<Employee> {
 
         return sb.toString();
     }
-
 }
