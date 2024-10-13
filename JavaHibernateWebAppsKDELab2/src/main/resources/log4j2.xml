@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <ThresholdFilter level="info"/>
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %level - %msg%n"/>
+        </Console>
+        <File name="HibernateWebAppFileAppender" fileName="storage/logs/HibernateWebApp-${date:yyyyMMdd}.log" immediateFlush="true" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %level - %msg%n" charset="UTF-8"/>
+        </File>
+        <File name="ListenerFileAppender" fileName="storage/logs/ListenerLogs-${date:yyyyMMdd}.log" immediateFlush="true" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %level - %msg%n" charset="UTF-8"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="csit.semit.kde.javahibernatewebappskdelab2.listeners" level="info" additivity="false">
+            <AppenderRef ref="ListenerFileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+        <Logger name="org.hibernate" level="debug" additivity="false">
+            <AppenderRef ref="HibernateWebAppFileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+
+        <Root level="debug">
+            <AppenderRef ref="HibernateWebAppFileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>

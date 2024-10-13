@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+    <welcome-file-list>
+        <welcome-file>/WEB-INF/views/home/home.jsp</welcome-file>
+    </welcome-file-list>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/error/general-error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/error/general-error.jsp</location>
+    </error-page>
+
+    <listener>
+        <listener-class>csit.semit.kde.javahibernatewebappskdelab2.listeners.AppStartupListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>csit.semit.kde.javahibernatewebappskdelab2.listeners.SessionListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>csit.semit.kde.javahibernatewebappskdelab2.listeners.RequestListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.auth.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CheckLoginServlet</servlet-name>
+        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.auth.CheckLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckLoginServlet</servlet-name>
+        <url-pattern>/check-login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.main.MainServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/main</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ProjectDescriptionServlet</servlet-name>
+        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.main.ProjectDescriptionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProjectDescriptionServlet</servlet-name>
+        <url-pattern>/project-description</url-pattern>
+    </servlet-mapping>
+
+<!--    <servlet>-->
+<!--        <servlet-name>TrainsServlet</servlet-name>-->
+<!--        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.train.TrainsServlet</servlet-class>-->
+<!--    </servlet>-->
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>TrainsServlet</servlet-name>-->
+<!--        <url-pattern>/trains</url-pattern>-->
+<!--    </servlet-mapping>-->
+</web-app>
