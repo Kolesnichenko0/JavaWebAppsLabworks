@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * The {@code ShowTableServlet} class handles the display of the employee table in the web application.
@@ -43,6 +45,8 @@ public class ShowTableServlet extends HttpServlet {
             throws ServletException, IOException {
         EmployeeList employeeList = EmployeeList.getInstance();
         request.setAttribute("employeeList", employeeList);
+        Date now = new Date();
+        request.setAttribute("now", now);
         request.getRequestDispatcher(TABLE_JSP_PATH).forward(request, response);
     }
 
