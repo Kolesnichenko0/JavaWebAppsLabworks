@@ -1,3 +1,7 @@
+import { clearErrors, displayError } from './util/train-utils.js';
+import { updateDurationLabels } from './util/duration.js';
+
+window.updateDurationLabels = updateDurationLabels;
 document.addEventListener('DOMContentLoaded', () => {
     const contextPath = document.querySelector('meta[name="context-path"]').getAttribute('content');
 
@@ -33,32 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentStatusElement) {
         currentStatusElement.scrollIntoView({behavior: 'smooth'});
     }
+
     const urlParams = new URLSearchParams(window.location.search);
 
     function updateUrl(params) {
         window.location.href = `${contextPath}/trains?${params.toString()}`;
-    }
-
-    function displayError(element, message) {
-        const errorElement = document.createElement('div');
-        errorElement.className = 'text-danger mt-2';
-        errorElement.textContent = message;
-        element.parentNode.appendChild(errorElement);
-    }
-
-    function clearErrors() {
-        const errorElements = document.querySelectorAll('.text-danger');
-        errorElements.forEach(el => el.remove());
-    }
-
-    function displayCurrentSort() {
-        const currentSort = document.getElementById('currentSort');
-        const sortBy = urlParams.get('sortBy');
-        if (sortBy) {
-            currentSort.innerHTML = `<strong>Sorting:</strong> ${sortBy.replace(/([A-Z])/g, ' $1').trim()}`;
-        } else {
-            currentSort.innerHTML = '<strong>Sorting:</strong> No sorting applied';
-        }
     }
 
     function displayCurrentSearch() {
@@ -77,16 +60,95 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    searchByNumberBtn.addEventListener('click', () => {
+        clearErrors();
+        const number = document.getElementById('searchNumber').value;
+        if (!number) {
+            displayError('searchNumber', 'Please enter a train number.');
+            return;
+        }
+        urlParams.set('qNumber', number);
+        urlParams.delete('qDeparture');
+        urlParams.delete('qArrival');
+        urlParams.delete('fMovementType');
+        urlParams.delete('fDepTimeFrom');
+        urlParams.delete('fDepTimeTo');
+        urlParams.delete('fMinDuration');
+        urlParams.delete('fMaxDuration');
+        urlParams.delete('sortBy');
+        updateUrl(urlParams);
+    });
+
+    searchByDepartureBtn.addEventListener('click', () => {
+        clearErrors();
+        const departure = document.getElementById('searchDeparture').value;
+        if (!departure) {
+            displayError('searchDeparture', 'Please enter a departure station.');
+            return;
+        }
+        urlParams.set('qDeparture', departure);
+        urlParams.delete('qNumber');
+        urlParams.delete('qArrival');
+        urlParams.delete('fMovementType');
+        urlParams.delete('fDepTimeFrom');
+        urlParams.delete('fDepTimeTo');
+        urlParams.delete('fMinDuration');
+        urlParams.delete('fMaxDuration');
+        urlParams.delete('sortBy');
+        updateUrl(urlParams);
+    });
+
+    searchByArrivalBtn.addEventListener('click', () => {
+        clearErrors();
+        const arrival = document.getElementById('searchArrival').value;
+        if (!arrival) {
+            displayError('searchArrival', 'Please enter an arrival station.');
+            return;
+        }
+        urlParams.set('qArrival', arrival);
+        urlParams.delete('qNumber');
+        urlParams.delete('qDeparture');
+        urlParams.delete('fMovementType');
+        urlParams.delete('fDepTimeFrom');
+        urlParams.delete('fDepTimeTo');
+        urlParams.delete('fMinDuration');
+        urlParams.delete('fMaxDuration');
+        urlParams.delete('sortBy');
+        updateUrl(urlParams);
+    });
+
+    searchByDepartureArrivalBtn.addEventListener('click', () => {
+        clearErrors();
+        const departure = document.getElementById('searchDeparture').value;
+        const arrival = document.getElementById('searchArrival').value;
+        if (!departure) {
+            displayError('searchDeparture', 'Please enter a departure station.');
+            return;
+        }
+        if (!arrival) {
+            displayError('searchArrival', 'Please enter an arrival station.');
+            return;
+        }
+        urlParams.set('qDeparture', departure);
+        urlParams.set('qArrival', arrival);
+        urlParams.delete('qNumber');
+        urlParams.delete('fMovementType');
+        urlParams.delete('fDepTimeFrom');
+        urlParams.delete('fDepTimeTo');
+        urlParams.delete('fMinDuration');
+        urlParams.delete('fMaxDuration');
+        urlParams.delete('sortBy');
+        updateUrl(urlParams);
+    });
+
     let isDurationChanged = false;
 
     function displayCurrentFilter() {
         const movementType = urlParams.get('fMovementType');
 
         if (movementType) {
-            // Разделяем строку параметров
             const movementTypes = movementType.split('T');
 
-            // Для каждого типа движения находим чекбокс по значению
             movementTypes.forEach(type => {
                 const checkboxes = document.querySelectorAll('input.form-check-input');
 
@@ -127,10 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDurationLabels();
     }
 
-    displayCurrentSort();
-    displayCurrentSearch();
-    displayCurrentFilter();
-
     minDuration.addEventListener('input', () => {
         if (!isDurationChanged) {
             maxDuration.value = 1440;
@@ -145,86 +203,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    searchByNumberBtn.addEventListener('click', () => {
-        clearErrors();
-        const number = document.getElementById('searchNumber').value;
-        if (!number) {
-            displayError(document.getElementById('searchNumber'), 'Please enter a train number.');
-            return;
+    function displayCurrentSort() {
+        const currentSort = document.getElementById('currentSort');
+        const sortBy = urlParams.get('sortBy');
+        if (sortBy) {
+            currentSort.innerHTML = `<strong>Sorting:</strong> ${sortBy.replace(/([A-Z])/g, ' $1').trim()}`;
+        } else {
+            currentSort.innerHTML = '<strong>Sorting:</strong> No sorting applied';
         }
-        urlParams.set('qNumber', number);
-        urlParams.delete('qDeparture');
-        urlParams.delete('qArrival');
-        urlParams.delete('fMovementType');
-        urlParams.delete('fDepTimeFrom');
-        urlParams.delete('fDepTimeTo');
-        urlParams.delete('fMinDuration');
-        urlParams.delete('fMaxDuration');
-        urlParams.delete('sortBy');
-        updateUrl(urlParams);
-    });
-
-    searchByDepartureBtn.addEventListener('click', () => {
-        clearErrors();
-        const departure = document.getElementById('searchDeparture').value;
-        if (!departure) {
-            displayError(document.getElementById('searchDeparture'), 'Please enter a departure station.');
-            return;
-        }
-        urlParams.set('qDeparture', departure);
-        urlParams.delete('qNumber');
-        urlParams.delete('qArrival');
-        urlParams.delete('fMovementType');
-        urlParams.delete('fDepTimeFrom');
-        urlParams.delete('fDepTimeTo');
-        urlParams.delete('fMinDuration');
-        urlParams.delete('fMaxDuration');
-        urlParams.delete('sortBy');
-        updateUrl(urlParams);
-    });
-
-    searchByArrivalBtn.addEventListener('click', () => {
-        clearErrors();
-        const arrival = document.getElementById('searchArrival').value;
-        if (!arrival) {
-            displayError(document.getElementById('searchArrival'), 'Please enter an arrival station.');
-            return;
-        }
-        urlParams.set('qArrival', arrival);
-        urlParams.delete('qNumber');
-        urlParams.delete('qDeparture');
-        urlParams.delete('fMovementType');
-        urlParams.delete('fDepTimeFrom');
-        urlParams.delete('fDepTimeTo');
-        urlParams.delete('fMinDuration');
-        urlParams.delete('fMaxDuration');
-        urlParams.delete('sortBy');
-        updateUrl(urlParams);
-    });
-
-    searchByDepartureArrivalBtn.addEventListener('click', () => {
-        clearErrors();
-        const departure = document.getElementById('searchDeparture').value;
-        const arrival = document.getElementById('searchArrival').value;
-        if (!departure) {
-            displayError(document.getElementById('searchDeparture'), 'Please enter a departure station.');
-            return;
-        }
-        if (!arrival) {
-            displayError(document.getElementById('searchArrival'), 'Please enter an arrival station.');
-            return;
-        }
-        urlParams.set('qDeparture', departure);
-        urlParams.set('qArrival', arrival);
-        urlParams.delete('qNumber');
-        urlParams.delete('fMovementType');
-        urlParams.delete('fDepTimeFrom');
-        urlParams.delete('fDepTimeTo');
-        urlParams.delete('fMinDuration');
-        urlParams.delete('fMaxDuration');
-        urlParams.delete('sortBy');
-        updateUrl(urlParams);
-    });
+    }
 
     sortByNumberAscBtn.addEventListener('click', () => {
         urlParams.set('sortBy', "numberAsc");
@@ -393,36 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    displayCurrentSort();
+    displayCurrentSearch();
+    displayCurrentFilter();
     fetchTrains();
-
-    let minDurationTouched = false;
-    let maxDurationTouched = false;
-
-    minDuration.addEventListener('input', function () {
-        if (!minDurationTouched) {
-            maxDuration.value = 1440;
-            minDurationTouched = true;
-            maxDurationTouched = true;
-        }
-        updateDurationLabels();
-    });
-
-    maxDuration.addEventListener('input', function () {
-        if (!maxDurationTouched) {
-            minDuration.value = 0;
-            maxDurationTouched = true;
-            minDurationTouched = true;
-        }
-        updateDurationLabels();
-    });
 });
-
-function updateDurationLabels() {
-    const minDuration = document.getElementById('minDuration').value;
-    const maxDuration = document.getElementById('maxDuration').value;
-    const minHours = Math.floor(minDuration / 60);
-    const minMinutes = minDuration % 60;
-    const maxHours = Math.floor(maxDuration / 60);
-    const maxMinutes = maxDuration % 60;
-    document.getElementById('durationLabels').textContent = `${minHours}h ${minMinutes}m - ${maxHours}h ${maxMinutes}m`;
-}

@@ -17,7 +17,7 @@
     <link href="${pageContext.servletContext.contextPath}/resources/css/train/trains.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"></script>
-    <script src="${pageContext.servletContext.contextPath}/resources/js/train/trains.js" defer></script>
+    <script src="${pageContext.servletContext.contextPath}/resources/js/train/trains.js" type="module" defer></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <jsp:include page="/WEB-INF/views/main/header.jsp"/>
@@ -93,18 +93,6 @@
             <div class="card">
                 <div class="card-body">
                     <h5>Filter Options</h5>
-<%--                    <div class="form-check">--%>
-<%--                        <input class="form-check-input" type="checkbox" value="Щоденні" id="filterDaily">--%>
-<%--                        <label class="form-check-label" for="filterDaily">Щоденні</label>--%>
-<%--                    </div>--%>
-<%--                    <div class="form-check">--%>
-<%--                        <input class="form-check-input" type="checkbox" value="Парні" id="filterEven">--%>
-<%--                        <label class="form-check-label" for="filterEven">Парні</label>--%>
-<%--                    </div>--%>
-<%--                    <div class="form-check">--%>
-<%--                        <input class="form-check-input" type="checkbox" value="Непарні" id="filterOdd">--%>
-<%--                        <label class="form-check-label" for="filterOdd">Непарні</label>--%>
-<%--                    </div>--%>
                     <c:forEach var="movement" items="${MovementType.values()}">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="${movement.getDisplayName()}" id="filter${movement.name()}">
@@ -150,7 +138,6 @@
                 </tr>
                 </thead>
                 <tbody id="trainTableBody">
-                <!-- Data will be populated by JavaScript -->
                 </tbody>
             </table>
         </div>
