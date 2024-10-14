@@ -73,6 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
+                if (response.status === 404) {
+                    return response.text().then(html => {
+                        console.error(errorMessage);
+                        document.body.innerHTML = html;
+                    });
+                }
+
                 if (response.status === 500) {
                     return response.text().then(html => {
                         console.error(errorMessage);

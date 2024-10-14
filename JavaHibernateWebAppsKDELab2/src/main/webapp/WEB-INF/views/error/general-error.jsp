@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isErrorPage="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%--<%@ page buffer="none" %>--%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,8 +13,34 @@
     <link rel="icon" href="${pageContext.servletContext.contextPath}/resources/images/favicon.png" sizes="32x32" type="image/png">
 </head>
 <body class="d-flex flex-column min-vh-100">
-<jsp:include page="/WEB-INF/views/main/header.jsp"/>
-<%--<c:import url=="/WEB-INF/views/main/header.jsp"/>--%>
+<header class="bg-success text-white py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="${pageContext.servletContext.contextPath}/main" class="d-flex align-items-center text-white text-decoration-none">
+            <img src="${pageContext.servletContext.contextPath}/resources/images/logo.png" alt="Logo" class="me-2"/>
+            <h1 class="mb-0">Train Management System</h1>
+        </a>
+
+        <nav>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="${pageContext.servletContext.contextPath}/project-description" class="nav-link text-white">
+                        Project Description
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="${pageContext.servletContext.contextPath}/trains" class="nav-link text-white">
+                        Manage Trains
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="${pageContext.servletContext.contextPath}/main" class="nav-link text-white">
+                        Go to Home
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
 <main class="container my-5">
     <div class="text-center">
         <h1 class="mb-4">${pageContext.errorData.statusCode} -
@@ -48,6 +75,12 @@
         </div>
     </div>
 </main>
-<jsp:include page="/WEB-INF/views/main/footer.jsp"/>
+<footer class="bg-light text-center py-3 mt-auto" style="color: #333;">
+    <div class="container">
+        <p class="mb-0" style="font-size: 14px; color: #7ba57b;">
+            Copyright Denys KOLESNYCHENKO, CS-222a, SEMIT, CSIT, NTU "KhPI", 2024.
+        </p>
+    </div>
+</footer>
 </body>
 </html>

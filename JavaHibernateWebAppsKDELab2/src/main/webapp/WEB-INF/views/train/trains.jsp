@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="csit.semit.kde.javahibernatewebappskdelab2.enums.MovementType" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,26 +87,32 @@
             </div>
             <button id="resetSortBtn" class="btn btn-danger">Reset Sort</button>
         </div>
-<%--        <div id="currentSort" class="mt-2 text-muted">No sorting applied</div>--%>
     </div>
-<%--    <div id="currentSearch" class="mb-3 text-muted">Showing all results</div>--%>
     <div class="row">
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h5>Filter Options</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Щоденні" id="filterDaily">
-                        <label class="form-check-label" for="filterDaily">Щоденні</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Парні" id="filterEven">
-                        <label class="form-check-label" for="filterEven">Парні</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Непарні" id="filterOdd">
-                        <label class="form-check-label" for="filterOdd">Непарні</label>
-                    </div>
+<%--                    <div class="form-check">--%>
+<%--                        <input class="form-check-input" type="checkbox" value="Щоденні" id="filterDaily">--%>
+<%--                        <label class="form-check-label" for="filterDaily">Щоденні</label>--%>
+<%--                    </div>--%>
+<%--                    <div class="form-check">--%>
+<%--                        <input class="form-check-input" type="checkbox" value="Парні" id="filterEven">--%>
+<%--                        <label class="form-check-label" for="filterEven">Парні</label>--%>
+<%--                    </div>--%>
+<%--                    <div class="form-check">--%>
+<%--                        <input class="form-check-input" type="checkbox" value="Непарні" id="filterOdd">--%>
+<%--                        <label class="form-check-label" for="filterOdd">Непарні</label>--%>
+<%--                    </div>--%>
+                    <c:forEach var="movement" items="${MovementType.values()}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="${movement.getDisplayName()}" id="filter${movement.name()}">
+                            <label class="form-check-label" for="filter${movement.name()}">
+                                    ${fn:toUpperCase(fn:substring(movement.getDisplayName(), 0, 1))}${fn:toLowerCase(fn:substring(movement.getDisplayName(), 1, fn:length(movement.displayName)))}
+                            </label>
+                        </div>
+                    </c:forEach>
                     <div class="mt-3">
                         <label for="filterFromTime">Departure Time From:</label>
                         <input type="time" id="filterFromTime" class="form-control">

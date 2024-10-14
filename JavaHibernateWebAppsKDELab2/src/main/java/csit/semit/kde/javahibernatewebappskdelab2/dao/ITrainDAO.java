@@ -41,6 +41,16 @@ public interface ITrainDAO extends EntityDAO<Train> {
         }
     }
 
+    default OperationResult<Train> findByNumberInDeleted(@NonNull String number) {
+        try {
+            Field numberField = getEntityClass().getDeclaredField(FieldName.NUMBER.getRealName());
+            return findByKeyInDeleted(numberField, number);
+        } catch (NoSuchFieldException | SecurityException e) {
+            e.printStackTrace();
+            return new OperationResult<>(OperationStatus.FIELD_NOT_FOUND);
+        }
+    }
+
     default OperationResult<Train> findAndFilterAndSortByQueryParams(TrainQueryParams queryParams) {
 
         try (Session session = getSessionFactory().openSession()) {

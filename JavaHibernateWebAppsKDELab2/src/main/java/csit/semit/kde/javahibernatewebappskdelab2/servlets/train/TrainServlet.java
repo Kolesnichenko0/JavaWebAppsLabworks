@@ -9,6 +9,7 @@ import csit.semit.kde.javahibernatewebappskdelab2.util.result.FieldName;
 import csit.semit.kde.javahibernatewebappskdelab2.util.result.service.ServiceErrorUtil;
 import csit.semit.kde.javahibernatewebappskdelab2.util.result.service.ServiceResult;
 import csit.semit.kde.javahibernatewebappskdelab2.util.result.service.ServiceStatus;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,15 +27,17 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@WebServlet("/trains/*")
 public class TrainServlet extends HttpServlet {
     private static final String TRAIN_JSP_PATH = "/WEB-INF/views/train/train.jsp";
     private static final String TRAINS_JSP_PATH = "/WEB-INF/views/train/trains.jsp";
     private static final String TRAIN_CREATE_JSP_PATH = "/WEB-INF/views/train/train-create.jsp";
     private static final String TRAINS_RESTORE_JSP_PATH = "/WEB-INF/views/train/train-restore.jsp";
+    private static final String GENERAL_ERROR_JSP_PATH = "/WEB-INF/views/error/general-error.jsp";
     private TrainService trainService;
 
     @Override
@@ -50,6 +53,7 @@ public class TrainServlet extends HttpServlet {
             super.service(request, response);
         }
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -62,6 +66,8 @@ public class TrainServlet extends HttpServlet {
         String minDuration = getDecodedParameter(request, "fMinDuration");
         String maxDuration = getDecodedParameter(request, "fMaxDuration");
         String movementType = getDecodedParameter(request, "fMovementType");
+        String trainNumber = getDecodedParameter(request, "number");
+
 
         String acceptHeader = request.getHeader("Accept");
 
@@ -80,21 +86,36 @@ public class TrainServlet extends HttpServlet {
             } else if (pathInfo.equals("/restore")) {
                 request.getRequestDispatcher(TRAINS_RESTORE_JSP_PATH).forward(request, response);
                 return;
-            }  else if (pathInfo.equals("/deleted")) {
+            } else if (pathInfo.equals("/deleted")) {
                 ServiceResult<TrainDTO> result = trainService.findDeletedEntities();
                 handleGETResult(result, response);
                 return;
-            } else if (!pathInfo.matches("/\\d+")) {
+            } else if (pathInfo.equals("/id")) {
+                if (trainNumber != null) {
+                    ServiceResult<TrainDTO> result = trainService.findByNumberInDeleted(trainNumber);
+                    handleGETResult(result, response);
+                    return;
+                } else {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
+                    response.setHeader("Error-Message", "Invalid URL or parameters");
+                    return;
+                }
+            }else if (!pathInfo.matches("/\\d+")) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
                 response.setHeader("Error-Message", "Invalid URL or parameters");
                 return;
             }
 
+            Long trainId = Long.parseLong(pathInfo.substring(1));
+            ServiceResult<TrainDTO> result = trainService.findById(trainId);
             if (acceptHeader != null && acceptHeader.contains("text/html")) {
+                if (result.getStatus() == ServiceStatus.ENTITY_NOT_FOUND){
+                    response.setHeader("Error-Message", ServiceErrorUtil.getMessage(result));
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
+                    return;
+                }
                 request.getRequestDispatcher(TRAIN_JSP_PATH).forward(request, response);
             } else {
-                Long trainId = Long.parseLong(pathInfo.substring(1));
-                ServiceResult<TrainDTO> result = trainService.findById(trainId);
                 handleGETResult(result, response);
             }
         } else {
@@ -200,8 +221,19 @@ public class TrainServlet extends HttpServlet {
             return;
         }
 
-        ServiceResult<TrainDTO> result = trainService.delete(id);
-        handlePATCHResult(result, request, response);
+        String action = request.getHeader("Action");
+        ServiceResult<TrainDTO> result;
+
+        if ("restore".equalsIgnoreCase(action)) {
+            result = trainService.restore(id);
+            handleRestorePATCHResult(result, request, response, id);
+        } else if ("delete".equalsIgnoreCase(action)) {
+            result = trainService.delete(id);
+            handleDeletePATCHResult(result, request, response);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
+            response.setHeader("Error-Message", "Invalid action");
+        }
     }
 
     @Override
@@ -336,8 +368,11 @@ public class TrainServlet extends HttpServlet {
     }
 
     private void setErrorResponse(HttpServletResponse response, int statusCode, String message) throws IOException {
-        response.setStatus(statusCode);
         response.setHeader("Error-Message", message);
+        if(statusCode == 500) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        response.setStatus(statusCode);
     }
 
     private boolean isValidContentType(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -364,17 +399,23 @@ public class TrainServlet extends HttpServlet {
                 response.getWriter().write(jsonResponse.toString());
             } else {
                 JSONObject jsonResponse = new JSONObject(result.getEntity());
-                response.getWriter().write(jsonResponse.toString());
+                response.getWriter().write(processTrainEntity(jsonResponse).toString());
             }
             response.setHeader("Success-Message", "Operation successful");
-        } else if (result.getStatus() == ServiceStatus.ENTITIES_NOT_FOUND || result.getStatus() == ServiceStatus.ENTITY_NOT_FOUND) {
+        } else if (result.getStatus() == ServiceStatus.ENTITIES_NOT_FOUND) {
             response.setStatus(HttpServletResponse.SC_NO_CONTENT); // 204
             response.setHeader("Success-Message", ServiceErrorUtil.getMessage(result));
+        } else if (result.getStatus() == ServiceStatus.ENTITY_NOT_FOUND){
+            response.setHeader("Error-Message", ServiceErrorUtil.getMessage(result));
+            response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
         } else {
-            int statusCode = ServiceErrorUtil.getHttpErrorStatusCode(result.getStatus());
-            response.setStatus(statusCode);
             String message = ServiceErrorUtil.getMessage(result);
             response.setHeader("Error-Message", message);
+            int statusCode = ServiceErrorUtil.getHttpErrorStatusCode(result.getStatus());
+            if (statusCode == 500) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+            response.setStatus(statusCode);
         }
     }
 
@@ -382,47 +423,62 @@ public class TrainServlet extends HttpServlet {
         if (result.getStatus() == ServiceStatus.SUCCESS) {
             response.setStatus(HttpServletResponse.SC_CREATED);
             JSONObject jsonResponse = new JSONObject(result.getEntity());
-            response.getWriter().write(jsonResponse.toString());
+            response.getWriter().write(processTrainEntity(jsonResponse).toString());
             String newResourceUrl = request.getRequestURL().toString() + "/" + ((TrainDTO) result.getEntity()).getId();
             response.setHeader("Location", newResourceUrl);
             response.setHeader("Success-Message", "Resource created successfully");
         } else {
-            int statusCode = ServiceErrorUtil.getHttpErrorStatusCode(result.getStatus());
-            response.setStatus(statusCode);
             String message = ServiceErrorUtil.getMessage(result);
             response.setHeader("Error-Message", message);
+            int statusCode = ServiceErrorUtil.getHttpErrorStatusCode(result.getStatus());
+            if(statusCode == 500) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+            response.setStatus(statusCode);
         }
     }
 
-    private void handlePUTResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handlePUTResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String resourceUrl = request.getRequestURL().toString();
         handleResult(result, request, response, resourceUrl);
     }
 
-    private void handlePATCHResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleDeletePATCHResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String successLocation = request.getContextPath() + "/trains";
         handleResult(result, request, response, successLocation);
     }
 
-    private void handleDELETEResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleRestorePATCHResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response, Long id) throws IOException, ServletException {
+        String successLocation = request.getContextPath() + "/trains/" + id;
+        handleResult(result, request, response, successLocation);
+    }
+
+    private void handleDELETEResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String successLocation = request.getContextPath() + "/trains";
         handleResult(result, request, response, successLocation);
     }
 
-    private void handleResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response, String successLocation) throws IOException {
+    private void handleResult(ServiceResult<?> result, HttpServletRequest request, HttpServletResponse response, String successLocation) throws IOException, ServletException {
         if (result.getStatus() == ServiceStatus.SUCCESS) {
             response.setStatus(HttpServletResponse.SC_OK); // 200
             JSONObject jsonResponse = new JSONObject(result.getEntity());
-            response.getWriter().write(jsonResponse.toString());
+            response.getWriter().write(processTrainEntity(jsonResponse).toString());
             response.setHeader("Success-Message", "Operation successful");
             response.setHeader("Location", successLocation);
+        } else if (result.getStatus() == ServiceStatus.ENTITY_NOT_FOUND) {
+            response.setHeader("Error-Message", ServiceErrorUtil.getMessage(result));
+            response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
         } else {
-            int statusCode = ServiceErrorUtil.getHttpErrorStatusCode(result.getStatus());
-            response.setStatus(statusCode);
             String message = ServiceErrorUtil.getMessage(result);
             response.setHeader("Error-Message", message);
+            int statusCode = ServiceErrorUtil.getHttpErrorStatusCode(result.getStatus());
+            if(statusCode == 500) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+            response.setStatus(statusCode);
         }
     }
+
     private String getDecodedParameter(HttpServletRequest request, String paramName) {
         String param = request.getParameter(paramName);
         return param != null ? URLDecoder.decode(param, StandardCharsets.UTF_8) : null;

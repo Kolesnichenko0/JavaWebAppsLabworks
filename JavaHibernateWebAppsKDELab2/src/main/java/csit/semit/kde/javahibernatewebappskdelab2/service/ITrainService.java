@@ -163,6 +163,16 @@ public interface ITrainService {
         return convertToServiceResult(operationResult);
     }
 
+    default ServiceResult<TrainDTO> findByNumberInDeleted(@NonNull String number) {
+        try {
+            number = Train.validateNumber(number);
+        } catch (FieldValidationException e) {
+            return new ServiceResult<>(ServiceStatus.VALIDATION_ERROR, e.getFieldName());
+        }
+        OperationResult<Train> operationResult = getTrainDAO().findByNumberInDeleted(number);
+        return convertToServiceResult(operationResult);
+    }
+
     default ServiceResult<TrainDTO> findAndFilterAndSortByQueryParams(TrainQueryParams queryParams) {
         TrainDAO trainDAO = getTrainDAO();
         OperationResult<Train> operationResult = trainDAO.findAndFilterAndSortByQueryParams(queryParams);

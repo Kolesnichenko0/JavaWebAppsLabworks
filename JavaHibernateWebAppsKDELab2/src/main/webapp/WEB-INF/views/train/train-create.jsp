@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="csit.semit.kde.javahibernatewebappskdelab2.enums.MovementType" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,9 +46,9 @@
                 <div class="mb-3">
                     <label for="movementType" class="form-label">Movement Type</label>
                     <select id="movementType" class="form-select" required>
-                        <option value="Щоденні">Щоденні</option>
-                        <option value="Парні">Парні</option>
-                        <option value="Непарні">Непарні</option>
+                        <c:forEach var="movement" items="${MovementType.getMovementTypes()}">
+                            <option value="${movement}">${fn:toUpperCase(fn:substring(movement, 0, 1))}${fn:toLowerCase(fn:substring(movement, 1, fn:length(movement)))}</option>
+                        </c:forEach>
                     </select>
                 </div>
                 <div class="mb-3">

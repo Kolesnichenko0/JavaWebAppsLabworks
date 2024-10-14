@@ -18,7 +18,10 @@ import org.hibernate.Transaction;
 import jakarta.validation.Validator;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
+
+import static java.lang.reflect.Modifier.isStatic;
 
 public interface EntityDAO<E> {
     SessionFactory getSessionFactory();
@@ -34,7 +37,28 @@ public interface EntityDAO<E> {
             transaction.rollback();
         }
     }
+    private void copyProperties(Object source, Object target) {
+        Class<?> sourceClass = source.getClass();
 
+        while (sourceClass != null) {
+            for (Field field : sourceClass.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
+                field.setAccessible(true);
+                try {
+                    Object value = field.get(source);
+                    if (value != null) {
+                        field.set(target, value);
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            //Going up the class hierarchy
+            sourceClass = sourceClass.getSuperclass();
+        }
+    }
     private OperationResult<E> validateEntity(E entity) {
         Validator validator = getValidator();
         Set<ConstraintViolation<E>> violations = validator.validate(entity);
@@ -51,7 +75,6 @@ public interface EntityDAO<E> {
 
     private OperationResult<E> checkDuplicateWithDeleted(E entity) {
         OperationResult<E> findResult = findByKeySet(entity, true);
-        System.out.println(findResult);
         if (findResult.getStatus() == OperationStatus.SUCCESS) {
             return new OperationResult<>(OperationStatus.DUPLICATE_ENTRY, findResult.getEntity(), findResult.getFoundFields());
         } else if (findResult.getStatus() == OperationStatus.VALIDATION_ERROR) {
@@ -159,6 +182,39 @@ public interface EntityDAO<E> {
                 );
             } else {
                 criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(field.getName()), value));
+            }
+
+            E result = session.createQuery(criteriaQuery).uniqueResult();
+
+            if (result == null) {
+                return new OperationResult<>(OperationStatus.ENTITY_NOT_FOUND);
+            } else {
+                return new OperationResult<>(OperationStatus.SUCCESS, result);
+            }
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            return new OperationResult<>(OperationStatus.DATABASE_ERROR);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new OperationResult<>(OperationStatus.UNKNOWN_ERROR);
+        }
+    }
+
+    default OperationResult<E> findByKeyInDeleted(@NonNull Field field, @NonNull Object value) {
+        try (Session session = getSessionFactory().openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(getEntityClass());
+            Root<E> root = criteriaQuery.from(getEntityClass());
+
+            if (SoftDeletable.class.isAssignableFrom(getEntityClass())) {
+                criteriaQuery.select(root).where(
+                        criteriaBuilder.and(
+                                criteriaBuilder.equal(root.get(field.getName()), value),
+                                criteriaBuilder.isTrue(root.get("isDeleted"))
+                        )
+                );
+            } else {
+                return new OperationResult<>(OperationStatus.ENTITY_NOT_FOUND);
             }
 
             E result = session.createQuery(criteriaQuery).uniqueResult();
@@ -334,12 +390,17 @@ public interface EntityDAO<E> {
             } else if (duplicateCheckResult.getStatus() != OperationStatus.SUCCESS) {
                 return duplicateCheckResult;
             }
-
-            E mergedEntity = session.merge(entityToUpdate);
+//            E mergedEntity = session.merge(entityToUpdate);
+//            System.out.println("Entity to update: " + entityToUpdate);
+//            System.out.println("Existing entity: " + existingEntity);
+            copyProperties(entityToUpdate, existingEntity);
+//            System.out.println("Entity to update: " + entityToUpdate);
+//            System.out.println("Existing entity: " + existingEntity);
 
             transaction.commit();
 
-            return new OperationResult<>(OperationStatus.SUCCESS, mergedEntity);
+            return new OperationResult<>(OperationStatus.SUCCESS, existingEntity);
+//            return new OperationResult<>(OperationStatus.SUCCESS, mergedEntity);
         } catch (HibernateException e) {
             rollbackTransaction(transaction);
             e.printStackTrace();

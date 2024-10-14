@@ -5,9 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchByDepartureBtn = document.getElementById('searchByDepartureBtn');
     const searchByArrivalBtn = document.getElementById('searchByArrivalBtn');
     const searchByDepartureArrivalBtn = document.getElementById('searchByDepartureArrivalBtn');
-    const filterDaily = document.getElementById('filterDaily');
-    const filterEven = document.getElementById('filterEven');
-    const filterOdd = document.getElementById('filterOdd');
     const filterFromTime = document.getElementById('filterFromTime');
     const filterToTime = document.getElementById('filterToTime');
     const minDuration = document.getElementById('minDuration');
@@ -84,10 +81,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayCurrentFilter() {
         const movementType = urlParams.get('fMovementType');
+
         if (movementType) {
-            filterDaily.checked = movementType.split('T').includes('щоденні');
-            filterEven.checked = movementType.split('T').includes('парні');
-            filterOdd.checked = movementType.split('T').includes('непарні');
+            // Разделяем строку параметров
+            const movementTypes = movementType.split('T');
+
+            // Для каждого типа движения находим чекбокс по значению
+            movementTypes.forEach(type => {
+                const checkboxes = document.querySelectorAll('input.form-check-input');
+
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.value === type) {
+                        checkbox.checked = true;
+                    }
+                });
+            });
         }
 
         const depTimeFrom = urlParams.get('fDepTimeFrom');
@@ -249,9 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     applyFiltersBtn.addEventListener('click', () => {
-        const filterDailyValue = filterDaily.checked;
-        const filterEvenValue = filterEven.checked;
-        const filterOddValue = filterOdd.checked;
         const filterFromTimeValue = filterFromTime.value;
         const filterToTimeValue = filterToTime.value;
 
@@ -270,9 +275,11 @@ document.addEventListener('DOMContentLoaded', () => {
         urlParams.delete('fMaxDuration');
 
         const movementTypes = [];
-        if (filterDailyValue) movementTypes.push('щоденні');
-        if (filterEvenValue) movementTypes.push('парні');
-        if (filterOddValue) movementTypes.push('непарні');
+        document.querySelectorAll('.form-check-input[type="checkbox"]').forEach(checkbox => {
+            if (checkbox.checked) {
+                movementTypes.push(checkbox.value);
+            }
+        });
 
         if (movementTypes.length === 1) {
             urlParams.set('fMovementType', movementTypes[0]);
@@ -294,9 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resetFiltersBtn.addEventListener('click', () => {
         isDurationChanged = false;
-        filterDaily.checked = false;
-        filterEven.checked = false;
-        filterOdd.checked = false;
+        document.querySelectorAll('.form-check-input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
         filterFromTime.value = '';
         filterToTime.value = '';
         minDuration.value = '';

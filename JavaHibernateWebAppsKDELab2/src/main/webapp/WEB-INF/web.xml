@@ -64,12 +64,12 @@
         <url-pattern>/project-description</url-pattern>
     </servlet-mapping>
 
-<!--    <servlet>-->
-<!--        <servlet-name>TrainsServlet</servlet-name>-->
-<!--        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.train.TrainsServlet</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>TrainsServlet</servlet-name>-->
-<!--        <url-pattern>/trains</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <servlet>
+        <servlet-name>TrainServlet</servlet-name>
+        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.train.TrainServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TrainServlet</servlet-name>
+        <url-pattern>/trains/*</url-pattern>
+    </servlet-mapping>
 </web-app>
