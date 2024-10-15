@@ -16,6 +16,31 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalTime;
 
+/**
+ * Abstract base class for transport entities.
+ * <p>
+ * This class is mapped as a superclass in JPA and provides common fields and methods for transport entities.
+ * It includes fields for ID, movement type, departure time, duration, and deletion status.
+ * </p>
+ * <p>
+ * The `Transport` class includes:
+ * <ul>
+ *   <li>Field validation for movement type, departure time, duration, and deletion status</li>
+ *   <li>Annotations for JPA entity mapping and Lombok for boilerplate code generation</li>
+ *   <li>Static methods for validating various fields</li>
+ * </ul>
+ * </p>
+ * <p>
+ * This class implements the `SoftDeletable` interface to support soft deletion.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych
+ * @see SoftDeletable
+ * @see FieldName
+ * @see MovementType
+ * @see FieldValidationException
+ * @since 1.0.0
+ */
 @Getter
 @Setter
 @MappedSuperclass

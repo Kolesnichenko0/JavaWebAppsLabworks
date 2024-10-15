@@ -21,8 +21,38 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-import static java.lang.reflect.Modifier.isStatic;
-
+/**
+ * Interface for Data Access Object (DAO) operations on entities.
+ * <p>
+ * This interface provides methods for common CRUD operations, validation, and transaction management.
+ * It supports soft deletion and validation of entities using Hibernate and Jakarta Validation.
+ * </p>
+ * <p>
+ * The interface includes methods for:
+ * <ul>
+ *   <li>Finding entities by various criteria</li>
+ *   <li>Validating entities</li>
+ *   <li>Handling transactions</li>
+ *   <li>Copying properties between objects</li>
+ *   <li>Checking for duplicate entries</li>
+ *   <li>Soft deleting and restoring entities</li>
+ *   <li>Truncating tables</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The methods use Hibernate for database interactions and Jakarta Validation for entity validation.
+ * Soft deletion is supported for entities implementing the {@link SoftDeletable} interface.
+ * </p>
+ *
+ * @param <E> the type of the entity
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see SessionFactory
+ * @see Validator
+ * @see SoftDeletable
+ * @see OperationResult
+ * @see OperationStatus
+ * @since 1.0.0
+ */
 public interface EntityDAO<E> {
     SessionFactory getSessionFactory();
 
@@ -37,6 +67,7 @@ public interface EntityDAO<E> {
             transaction.rollback();
         }
     }
+
     private void copyProperties(Object source, Object target) {
         Class<?> sourceClass = source.getClass();
 
@@ -59,6 +90,7 @@ public interface EntityDAO<E> {
             sourceClass = sourceClass.getSuperclass();
         }
     }
+
     private OperationResult<E> validateEntity(E entity) {
         Validator validator = getValidator();
         Set<ConstraintViolation<E>> violations = validator.validate(entity);

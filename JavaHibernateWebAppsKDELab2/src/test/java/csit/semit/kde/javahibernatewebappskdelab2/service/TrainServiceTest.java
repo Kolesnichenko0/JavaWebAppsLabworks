@@ -16,6 +16,33 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for the TrainService.
+ * <p>
+ * This class contains unit tests for the {@code TrainService} class, which provides various operations
+ * for managing train entities, such as creating, updating, deleting, and restoring trains.
+ * It uses JUnit 5 for testing and includes setup methods to initialize the necessary components.
+ * </p>
+ * <p>
+ * The `TrainServiceTest` class includes:
+ * <ul>
+ *   <li>Tests for creating a train</li>
+ *   <li>Tests for handling duplicate train creation</li>
+ *   <li>Tests for finding a train by ID</li>
+ *   <li>Tests for updating a train</li>
+ *   <li>Tests for deleting and restoring a train</li>
+ *   <li>Tests for filtering and sorting trains based on various criteria</li>
+ * </ul>
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see TrainService
+ * @see DAOManager
+ * @see TrainDTO
+ * @see ServiceResult
+ * @see ServiceStatus
+ * @since 1.0.0
+ */
 public class TrainServiceTest {
 
     private TrainService trainService;

@@ -35,6 +35,7 @@ export function formatErrorMessage(errorMessage) {
     }
     return errorMessage;
 }
+
 export function validateTrainNumber(number) {
     if (!number) {
         displayError('trainNumber', 'The number cannot be empty');
@@ -80,4 +81,18 @@ export function validateStationName(station, elementId) {
     }
 
     return true;
+}
+
+export function calculateArrivalTime(departureTime, duration) {
+    const [hours, minutes] = departureTime.split(':').map(Number);
+    const durationParts = duration.match(/(\d+)\s*год\.\s*(\d+)\s*хв\./);
+    const durationHours = parseInt(durationParts[1], 10);
+    const durationMinutes = parseInt(durationParts[2], 10);
+    const totalMinutes = durationHours * 60 + durationMinutes;
+
+    const totalDepartureMinutes = hours * 60 + minutes + totalMinutes;
+    const arrivalHours = Math.floor(totalDepartureMinutes / 60) % 24;
+    const arrivalMinutes = totalDepartureMinutes % 60;
+
+    return `${String(arrivalHours).padStart(2, '0')}:${String(arrivalMinutes).padStart(2, '0')}`;
 }

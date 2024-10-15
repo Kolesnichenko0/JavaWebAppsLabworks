@@ -8,12 +8,36 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.Check;
-//import org.hibernate.annotations.Check;
 
 import java.io.Serial;
 import java.time.Duration;
 import java.time.LocalTime;
 
+/**
+ * Entity class representing a Train.
+ * <p>
+ * This class is mapped to the "trains" table in the database and includes various fields such as number, departure station,
+ * arrival station, movement type, departure time, and duration. It also includes validation constraints for the fields.
+ * </p>
+ * <p>
+ * The `Train` class includes:
+ * <ul>
+ *   <li>Field validation using regular expressions and custom validation methods</li>
+ *   <li>Annotations for JPA entity mapping and Lombok for boilerplate code generation</li>
+ *   <li>Static methods for validating train number and station names</li>
+ * </ul>
+ * </p>
+ * <p>
+ * This class extends the `Transport` class and inherits its fields and methods.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych
+ * @see Transport
+ * @see FieldName
+ * @see MovementType
+ * @see FieldValidationException
+ * @since 1.0.0
+ */
 @Entity
 @Table(name = "trains", indexes = {
         @Index(name = "idx_train_departure_station", columnList = "departure_station"),
@@ -42,12 +66,12 @@ public class Train extends Transport {
             ")$";
 
     public static final String STATION_REGEX = "^(" +
-        "([А-ЗЙ-ЩЮЯЇІЄ][А-ЩЮЯЇІЄҐ]+|[А-ЗЙ-ЩЮЯЇІЄ][а-щьюяїієґ[\\']]+[\\.]?)" +
-        "(?:[ -]" +
-        "(?:[А-ЗЙ-ЩЮЯЇІЄ][А-ЩЮЯЇІЄҐ]+[0-9]*|" +
-        "[А-ЗЙ-ЩЮЯЇІЄ]?[а-щьюяїієґ[\\']]+[.|0-9]*|[0-9]+)|" +
-        "[\\(][А-ЗЙ-ЩЮЯЇІЄ]?[а-щьюяїієґ[\\']]+[\\.]?[\\)])*" +
-        "){1,100}$";
+            "([А-ЗЙ-ЩЮЯЇІЄ][А-ЩЮЯЇІЄҐ]+|[А-ЗЙ-ЩЮЯЇІЄ][а-щьюяїієґ[\\']]+[\\.]?)" +
+            "(?:[ -]" +
+            "(?:[А-ЗЙ-ЩЮЯЇІЄ][А-ЩЮЯЇІЄҐ]+[0-9]*|" +
+            "[А-ЗЙ-ЩЮЯЇІЄ]?[а-щьюяїієґ[\\']]+[.|0-9]*|[0-9]+)|" +
+            "[\\(][А-ЗЙ-ЩЮЯЇІЄ]?[а-щьюяїієґ[\\']]+[\\.]?[\\)])*" +
+            "){1,100}$";
 
     @NotNull
     @Pattern(regexp = NUMBER_REGEX, message = "Number must start with three digits, followed by one uppercase Ukrainian letter.")

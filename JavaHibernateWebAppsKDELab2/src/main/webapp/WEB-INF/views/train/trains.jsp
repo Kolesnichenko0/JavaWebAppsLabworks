@@ -77,12 +77,25 @@
                     Sort Options
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                    <li><button class="dropdown-item" id="sortByNumberAscBtn">Sort by Number Asc</button></li>
-                    <li><button class="dropdown-item" id="sortByNumberDescBtn">Sort by Number Desc</button></li>
-                    <li><button class="dropdown-item" id="sortByDurationAscBtn">Sort by Duration Asc</button></li>
-                    <li><button class="dropdown-item" id="sortByDurationDescBtn">Sort by Duration Desc</button></li>
-                    <li><button class="dropdown-item" id="sortByDepartureTimeAscBtn">Sort by Departure Time Asc</button></li>
-                    <li><button class="dropdown-item" id="sortByDepartureTimeDescBtn">Sort by Departure Time Desc</button></li>
+                    <li>
+                        <button class="dropdown-item" id="sortByNumberAscBtn">Sort by Number Asc</button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" id="sortByNumberDescBtn">Sort by Number Desc</button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" id="sortByDurationAscBtn">Sort by Duration Asc</button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" id="sortByDurationDescBtn">Sort by Duration Desc</button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" id="sortByDepartureTimeAscBtn">Sort by Departure Time Asc</button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" id="sortByDepartureTimeDescBtn">Sort by Departure Time Desc
+                        </button>
+                    </li>
                 </ul>
             </div>
             <button id="resetSortBtn" class="btn btn-danger">Reset Sort</button>
@@ -95,7 +108,8 @@
                     <h5>Filter Options</h5>
                     <c:forEach var="movement" items="${MovementType.values()}">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="${movement.getDisplayName()}" id="filter${movement.name()}">
+                            <input class="form-check-input" type="checkbox" value="${movement.getDisplayName()}"
+                                   id="filter${movement.name()}">
                             <label class="form-check-label" for="filter${movement.name()}">
                                     ${fn:toUpperCase(fn:substring(movement.getDisplayName(), 0, 1))}${fn:toLowerCase(fn:substring(movement.getDisplayName(), 1, fn:length(movement.displayName)))}
                             </label>
@@ -109,9 +123,11 @@
                     </div>
                     <div class="mt-3">
                         <label for="minDuration">Min Duration:</label>
-                        <input type="range" id="minDuration" class="form-range" min="0" max="1440" step="1" oninput="updateDurationLabels()">
+                        <input type="range" id="minDuration" class="form-range" min="0" max="1440" step="1"
+                               oninput="updateDurationLabels()">
                         <label for="maxDuration">Max Duration:</label>
-                        <input type="range" id="maxDuration" class="form-range" min="0" max="1440" step="1" oninput="updateDurationLabels()">
+                        <input type="range" id="maxDuration" class="form-range" min="0" max="1440" step="1"
+                               oninput="updateDurationLabels()">
                         <div class="d-flex justify-content-between">
                             <span>0h</span>
                             <span id="durationLabels">0h 0m - 24h 0m</span>
@@ -134,6 +150,7 @@
                     <th>Arrival Station</th>
                     <th>Movement Type</th>
                     <th>Departure Time</th>
+                    <th>Arrival Time</th>
                     <th>Duration</th>
                 </tr>
                 </thead>

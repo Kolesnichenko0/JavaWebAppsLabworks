@@ -24,30 +24,11 @@ import java.io.IOException;
 public class MainServlet extends HttpServlet {
     private static final String MAIN_JSP_PATH = "/WEB-INF/views/main/main.jsp";
 
-    /**
-     * Handles the HTTP GET method.
-     * It forwards the request and response objects to the main page.
-     *
-     * @param request  the request object that contains client request data
-     * @param response the response object to assist in sending a response to the client
-     * @throws ServletException if an input or output error is detected when the servlet
-     *                          handles the GET request
-     * @throws IOException      if the request for the GET could not be handled
-     */
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher(MAIN_JSP_PATH).forward(request, response);
     }
 
-    /**
-     * Handles the HTTP POST method.
-     * It forwards the request and response objects to the main page.
-     *
-     * @param request  the request object that contains client request data
-     * @param response the response object to assist in sending a response to the client
-     * @throws ServletException if an input or output error is detected when the servlet handles the POST request
-     * @throws IOException      if the request for the POST could not be handled
-     */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }

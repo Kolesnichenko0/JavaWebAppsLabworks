@@ -57,7 +57,8 @@
 
     <servlet>
         <servlet-name>ProjectDescriptionServlet</servlet-name>
-        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.main.ProjectDescriptionServlet</servlet-class>
+        <servlet-class>csit.semit.kde.javahibernatewebappskdelab2.servlets.main.ProjectDescriptionServlet
+        </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ProjectDescriptionServlet</servlet-name>

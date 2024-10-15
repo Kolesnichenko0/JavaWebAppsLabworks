@@ -8,6 +8,24 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for validating train numbers and station names using regular expressions.
+ * <p>
+ * This class contains unit tests for the {@code Train} entity, focusing on the validation of train numbers and station names
+ * using regular expressions. It uses JUnit 5 for testing and includes nested test classes for better organization of test cases.
+ * </p>
+ * <p>
+ * The `TrainNumberRegexTest` class includes:
+ * <ul>
+ *   <li>Validation of train numbers using regular expressions</li>
+ *   <li>Validation of station names using regular expressions</li>
+ * </ul>
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see Train
+ * @since 1.0.0
+ */
 class TrainNumberRegexTest {
 
     @Nested

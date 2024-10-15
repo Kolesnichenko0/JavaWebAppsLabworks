@@ -8,6 +8,31 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Set;
 
+/**
+ * Class representing query parameters for searching, filtering, and sorting train entities.
+ * <p>
+ * This class is used to encapsulate various parameters that can be used to search for, filter, and sort train entities.
+ * It includes parameters for searching by train number, departure station, and arrival station, as well as filtering by movement types,
+ * departure times, and durations. Additionally, it supports sorting by train number, duration, and departure time.
+ * </p>
+ * <p>
+ * The `TrainQueryParams` class includes:
+ * <ul>
+ *   <li>Search parameters: {@code searchingNumber}, {@code searchingArrivalStation}, {@code searchingDepartureStation}</li>
+ *   <li>Filter parameters: {@code filteringMovementTypes}, {@code filteringFrom}, {@code filteringTo}, {@code filteringMinDuration}, {@code filteringMaxDuration}</li>
+ *   <li>Sort parameters: {@code sortedByTrainNumberAsc}, {@code sortedByDurationAsc}, {@code sortedByDepartureTimeAsc}</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The class uses the Builder pattern to facilitate the construction of `TrainQueryParams` objects.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see MovementType
+ * @see Duration
+ * @see LocalTime
+ * @since 1.0.0
+ */
 @Getter
 @ToString
 public class TrainQueryParams {
@@ -23,7 +48,7 @@ public class TrainQueryParams {
     private Boolean sortedByDurationAsc;
     private Boolean sortedByDepartureTimeAsc;
 
-    private TrainQueryParams (Builder builder) {
+    private TrainQueryParams(Builder builder) {
         this.searchingNumber = builder.searchingNumber;
         this.searchingArrivalStation = builder.searchingArrivalStation;
         this.searchingDepartureStation = builder.searchingDepartureStation;

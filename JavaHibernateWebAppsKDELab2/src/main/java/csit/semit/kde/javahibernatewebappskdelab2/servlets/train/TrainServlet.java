@@ -1,7 +1,6 @@
 package csit.semit.kde.javahibernatewebappskdelab2.servlets.train;
 
 import csit.semit.kde.javahibernatewebappskdelab2.dto.TrainDTO;
-import csit.semit.kde.javahibernatewebappskdelab2.entity.Train;
 import csit.semit.kde.javahibernatewebappskdelab2.enums.MovementType;
 import csit.semit.kde.javahibernatewebappskdelab2.service.TrainService;
 import csit.semit.kde.javahibernatewebappskdelab2.util.criteria.TrainQueryParams;
@@ -9,9 +8,7 @@ import csit.semit.kde.javahibernatewebappskdelab2.util.result.FieldName;
 import csit.semit.kde.javahibernatewebappskdelab2.util.result.service.ServiceErrorUtil;
 import csit.semit.kde.javahibernatewebappskdelab2.util.result.service.ServiceResult;
 import csit.semit.kde.javahibernatewebappskdelab2.util.result.service.ServiceStatus;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,17 +24,55 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Servlet that handles various HTTP requests related to train entities.
+ * <p>
+ * This servlet is mapped to handle requests for creating, reading, updating, deleting, and restoring train entities.
+ * It supports the following HTTP methods:
+ * <ul>
+ *   <li>GET: Retrieves train entities based on various query parameters or specific paths.</li>
+ *   <li>POST: Creates a new train entity from the provided JSON data.</li>
+ *   <li>PUT: Updates an existing train entity identified by its ID with the provided JSON data.</li>
+ *   <li>PATCH: Performs partial updates or actions (like restore or delete) on a train entity identified by its ID.</li>
+ *   <li>DELETE: Permanently deletes a train entity identified by its ID.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The servlet interacts with the `TrainService` to perform the necessary operations and returns appropriate HTTP responses.
+ * It handles various scenarios such as invalid input, entity not found, and successful operations.
+ * </p>
+ * <p>
+ * The servlet also processes query parameters for filtering and sorting train entities based on departure time, duration, movement type, etc.
+ * </p>
+ * <p>
+ * The servlet ensures that the content type for POST, PUT, and PATCH requests is `application/json` and parses the request body accordingly.
+ * </p>
+ * <p>
+ * The servlet uses utility classes like `ServiceErrorUtil` to handle error messages and `TrainQueryParams` to build query parameters for filtering and sorting.
+ * </p>
+ * <p>
+ * The servlet also formats the duration of train journeys and handles JSON parsing and formatting for train entities.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see jakarta.servlet.http.HttpServlet
+ * @see jakarta.servlet.http.HttpServletRequest
+ * @see jakarta.servlet.http.HttpServletResponse
+ * @see csit.semit.kde.javahibernatewebappskdelab2.service.TrainService
+ * @see csit.semit.kde.javahibernatewebappskdelab2.dto.TrainDTO
+ * @see csit.semit.kde.javahibernatewebappskdelab2.util.criteria.TrainQueryParams
+ * @see csit.semit.kde.javahibernatewebappskdelab2.util.result.service.ServiceResult
+ * @see csit.semit.kde.javahibernatewebappskdelab2.util.result.service.ServiceStatus
+ * @since 1.0.0
+ */
 public class TrainServlet extends HttpServlet {
     private static final String TRAIN_JSP_PATH = "/WEB-INF/views/train/train.jsp";
     private static final String TRAINS_JSP_PATH = "/WEB-INF/views/train/trains.jsp";
     private static final String TRAIN_CREATE_JSP_PATH = "/WEB-INF/views/train/train-create.jsp";
     private static final String TRAINS_RESTORE_JSP_PATH = "/WEB-INF/views/train/train-restore.jsp";
-    private static final String GENERAL_ERROR_JSP_PATH = "/WEB-INF/views/error/general-error.jsp";
     private TrainService trainService;
 
     @Override
@@ -57,17 +92,16 @@ public class TrainServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
-        String qNumber = getDecodedParameter(request, "qNumber");
-        String qDeparture = getDecodedParameter(request, "qDeparture");
-        String qArrival = getDecodedParameter(request, "qArrival");
-        String sortBy = getDecodedParameter(request, "sortBy");
-        String depTimeFrom = getDecodedParameter(request, "fDepTimeFrom");
-        String depTimeTo = getDecodedParameter(request, "fDepTimeTo");
-        String minDuration = getDecodedParameter(request, "fMinDuration");
-        String maxDuration = getDecodedParameter(request, "fMaxDuration");
-        String movementType = getDecodedParameter(request, "fMovementType");
-        String trainNumber = getDecodedParameter(request, "number");
-
+        String qNumber = request.getParameter("qNumber");
+        String qDeparture =  request.getParameter("qDeparture");
+        String qArrival =  request.getParameter("qArrival");
+        String sortBy =  request.getParameter("sortBy");
+        String depTimeFrom =  request.getParameter("fDepTimeFrom");
+        String depTimeTo =  request.getParameter("fDepTimeTo");
+        String minDuration =  request.getParameter("fMinDuration");
+        String maxDuration =  request.getParameter("fMaxDuration");
+        String movementType =  request.getParameter("fMovementType");
+        String trainNumber =  request.getParameter("number");
 
         String acceptHeader = request.getHeader("Accept");
 
@@ -100,7 +134,7 @@ public class TrainServlet extends HttpServlet {
                     response.setHeader("Error-Message", "Invalid URL or parameters");
                     return;
                 }
-            }else if (!pathInfo.matches("/\\d+")) {
+            } else if (!pathInfo.matches("/\\d+")) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
                 response.setHeader("Error-Message", "Invalid URL or parameters");
                 return;
@@ -109,7 +143,7 @@ public class TrainServlet extends HttpServlet {
             Long trainId = Long.parseLong(pathInfo.substring(1));
             ServiceResult<TrainDTO> result = trainService.findById(trainId);
             if (acceptHeader != null && acceptHeader.contains("text/html")) {
-                if (result.getStatus() == ServiceStatus.ENTITY_NOT_FOUND){
+                if (result.getStatus() == ServiceStatus.ENTITY_NOT_FOUND) {
                     response.setHeader("Error-Message", ServiceErrorUtil.getMessage(result));
                     response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
                     return;
@@ -119,10 +153,9 @@ public class TrainServlet extends HttpServlet {
                 handleGETResult(result, response);
             }
         } else {
-            // Handle search query
             if (acceptHeader != null && acceptHeader.contains("text/html")) {
                 request.getRequestDispatcher(TRAINS_JSP_PATH).forward(request, response);
-            } else {
+            } else if (acceptHeader != null && acceptHeader.contains("application/json")) {
                 TrainQueryParams.Builder queryParamsBuilder = new TrainQueryParams.Builder();
 
                 if (qNumber != null) {
@@ -145,6 +178,9 @@ public class TrainServlet extends HttpServlet {
 
                 ServiceResult<TrainDTO> result = trainService.findAndFilterAndSortByQueryParams(queryParamsBuilder.build());
                 handleGETResult(result, response);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE); // 415
+                response.setHeader("Error-Message", "Content type must be text/html or application/json");
             }
         }
     }
@@ -153,6 +189,7 @@ public class TrainServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        setNoCacheHeaders(response);
 
         if (!isValidContentType(request, response)) return;
 
@@ -170,6 +207,7 @@ public class TrainServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        setNoCacheHeaders(response);
 
         if (!isValidContentType(request, response)) return;
 
@@ -202,6 +240,7 @@ public class TrainServlet extends HttpServlet {
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        setNoCacheHeaders(response);
 
         if (!isValidContentType(request, response)) return;
 
@@ -240,6 +279,7 @@ public class TrainServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        setNoCacheHeaders(response);
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null || !pathInfo.matches("/\\d+")) {
@@ -369,7 +409,7 @@ public class TrainServlet extends HttpServlet {
 
     private void setErrorResponse(HttpServletResponse response, int statusCode, String message) throws IOException {
         response.setHeader("Error-Message", message);
-        if(statusCode == 500) {
+        if (statusCode == 500) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         response.setStatus(statusCode);
@@ -384,9 +424,16 @@ public class TrainServlet extends HttpServlet {
         return true;
     }
 
+    private void setNoCacheHeaders(HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+    }
+
     private void handleGETResult(ServiceResult<?> result, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        setNoCacheHeaders(response);
 
         if (result.getStatus() == ServiceStatus.SUCCESS) {
             response.setStatus(HttpServletResponse.SC_OK); // 200
@@ -405,7 +452,7 @@ public class TrainServlet extends HttpServlet {
         } else if (result.getStatus() == ServiceStatus.ENTITIES_NOT_FOUND) {
             response.setStatus(HttpServletResponse.SC_NO_CONTENT); // 204
             response.setHeader("Success-Message", ServiceErrorUtil.getMessage(result));
-        } else if (result.getStatus() == ServiceStatus.ENTITY_NOT_FOUND){
+        } else if (result.getStatus() == ServiceStatus.ENTITY_NOT_FOUND) {
             response.setHeader("Error-Message", ServiceErrorUtil.getMessage(result));
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
         } else {
@@ -431,7 +478,7 @@ public class TrainServlet extends HttpServlet {
             String message = ServiceErrorUtil.getMessage(result);
             response.setHeader("Error-Message", message);
             int statusCode = ServiceErrorUtil.getHttpErrorStatusCode(result.getStatus());
-            if(statusCode == 500) {
+            if (statusCode == 500) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
             response.setStatus(statusCode);
@@ -472,15 +519,14 @@ public class TrainServlet extends HttpServlet {
             String message = ServiceErrorUtil.getMessage(result);
             response.setHeader("Error-Message", message);
             int statusCode = ServiceErrorUtil.getHttpErrorStatusCode(result.getStatus());
-            if(statusCode == 500) {
+            if (statusCode == 500) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
             response.setStatus(statusCode);
         }
     }
-
-    private String getDecodedParameter(HttpServletRequest request, String paramName) {
-        String param = request.getParameter(paramName);
-        return param != null ? URLDecoder.decode(param, StandardCharsets.UTF_8) : null;
-    }
+//    private String getDecodedParameter(HttpServletRequest request, String paramName) {
+//        String param = request.getParameter(paramName);
+//        return param != null ? URLDecoder.decode(param, StandardCharsets.UTF_8) : null;
+//    }
 }

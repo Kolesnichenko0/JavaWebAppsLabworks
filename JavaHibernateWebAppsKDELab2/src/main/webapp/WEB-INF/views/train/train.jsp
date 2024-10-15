@@ -9,10 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="context-path" content="${pageContext.servletContext.contextPath}">
     <title>Train Details</title>
-    <link rel="icon" href="${pageContext.servletContext.contextPath}/resources/images/favicon.png" sizes="32x32" type="image/png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="icon" href="${pageContext.servletContext.contextPath}/resources/images/favicon.png" sizes="32x32"
+          type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="${pageContext.servletContext.contextPath}/resources/css/train/trains.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
     <script src="${pageContext.servletContext.contextPath}/resources/js/train/train.js" type="module" defer></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -41,15 +44,18 @@
                 <div id="formError" class="alert alert-danger d-none"></div>
                 <div class="mb-3">
                     <label for="trainNumber" class="form-label">Train Number</label>
-                    <input type="text" id="trainNumber" class="form-control" placeholder="112ІС" minlength="1" maxlength="6" required>
+                    <input type="text" id="trainNumber" class="form-control" placeholder="112ІС" minlength="1"
+                           maxlength="6" required>
                 </div>
                 <div class="mb-3">
                     <label for="departureStation" class="form-label">Departure Station</label>
-                    <input type="text" id="departureStation" class="form-control" placeholder="Полтава-Київська" minlength="1" maxlength="100" required>
+                    <input type="text" id="departureStation" class="form-control" placeholder="Полтава-Київська"
+                           minlength="1" maxlength="100" required>
                 </div>
                 <div class="mb-3">
                     <label for="arrivalStation" class="form-label">Arrival Station</label>
-                    <input type="text" id="arrivalStation" class="form-control" placeholder="Харків-Пасажирський" minlength="1" maxlength="100" required>
+                    <input type="text" id="arrivalStation" class="form-control" placeholder="Харків-Пасажирський"
+                           minlength="1" maxlength="100" required>
                 </div>
                 <div class="mb-3">
                     <label for="movementType" class="form-label">Movement Type</label>
@@ -66,8 +72,10 @@
                 <div class="mb-3">
                     <label for="durationHours" class="form-label">Duration (hours and minutes)</label>
                     <div class="d-flex">
-                        <input type="number" id="durationHours" class="form-control me-2" min="0" max="24" placeholder="Hours" required>
-                        <input type="number" id="durationMinutes" class="form-control" min="0" max="59" placeholder="Minutes" required>
+                        <input type="number" id="durationHours" class="form-control me-2" min="0" max="24"
+                               placeholder="Hours" required>
+                        <input type="number" id="durationMinutes" class="form-control" min="0" max="59"
+                               placeholder="Minutes" required>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">

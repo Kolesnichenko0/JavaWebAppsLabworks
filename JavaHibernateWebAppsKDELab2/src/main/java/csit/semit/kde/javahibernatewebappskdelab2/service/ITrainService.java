@@ -16,6 +16,33 @@ import lombok.NonNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service interface for managing train-related operations.
+ * <p>
+ * This interface provides methods for creating, updating, deleting, and retrieving train entities. It also includes
+ * methods for restoring deleted entities and finding entities based on various criteria.
+ * </p>
+ * <p>
+ * The `ITrainService` interface includes:
+ * <ul>
+ *   <li>Methods for CRUD operations on train entities</li>
+ *   <li>Methods for converting operation results to service results</li>
+ *   <li>Methods for handling validation and mapping of train entities</li>
+ * </ul>
+ * </p>
+ * <p>
+ * This interface is designed to work with a `TrainDAO` for data access and a `TrainMapper` for entity-DTO mapping.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych
+ * @see TrainDAO
+ * @see TrainMapper
+ * @see ServiceResult
+ * @see ServiceStatus
+ * @see OperationResult
+ * @see OperationStatus
+ * @since 1.0.0
+ */
 public interface ITrainService {
     TrainDAO getTrainDAO();
 
@@ -69,6 +96,48 @@ public interface ITrainService {
         return convertToServiceResultWithList(getTrainDAO().getAllList(false));
     }
 
+    default ServiceResult<TrainDTO> findDeletedEntities() {
+        OperationResult<Train> operationResult = getTrainDAO().findDeletedEntities();
+        return convertToServiceResultWithList(operationResult);
+    }
+
+    default ServiceResult<TrainDTO> findById(@NonNull Long id) {
+        try {
+            Transport.validateId(id);
+        } catch (FieldValidationException e) {
+            return new ServiceResult<>(ServiceStatus.ENTITY_NOT_FOUND);
+        }
+        OperationResult<Train> operationResult = getTrainDAO().findById(id);
+        return convertToServiceResult(operationResult);
+    }
+
+    default ServiceResult<TrainDTO> findByNumber(@NonNull String number) {
+        try {
+            number = Train.validateNumber(number);
+        } catch (FieldValidationException e) {
+            return new ServiceResult<>(ServiceStatus.VALIDATION_ERROR, e.getFieldName());
+        }
+        OperationResult<Train> operationResult = getTrainDAO().findByNumber(number, false);
+        return convertToServiceResult(operationResult);
+    }
+
+    default ServiceResult<TrainDTO> findByNumberInDeleted(@NonNull String number) {
+        try {
+            number = Train.validateNumber(number);
+        } catch (FieldValidationException e) {
+            return new ServiceResult<>(ServiceStatus.VALIDATION_ERROR, e.getFieldName());
+        }
+        OperationResult<Train> operationResult = getTrainDAO().findByNumberInDeleted(number);
+        return convertToServiceResult(operationResult);
+    }
+
+    default ServiceResult<TrainDTO> findAndFilterAndSortByQueryParams(TrainQueryParams queryParams) {
+        TrainDAO trainDAO = getTrainDAO();
+        OperationResult<Train> operationResult = trainDAO.findAndFilterAndSortByQueryParams(queryParams);
+
+        return convertToServiceResultWithList(operationResult);
+    }
+
     default ServiceResult<TrainDTO> create(@NonNull TrainDTO trainDTO) {
         Train train;
         try {
@@ -107,11 +176,6 @@ public interface ITrainService {
         return convertToServiceResult(operationResult);
     }
 
-    default ServiceResult<TrainDTO> findDeletedEntities() {
-        OperationResult<Train> operationResult = getTrainDAO().findDeletedEntities();
-        return convertToServiceResultWithList(operationResult);
-    }
-
     default ServiceResult<TrainDTO> permanentDelete(@NonNull Long id) {
         try {
             Transport.validateId(id);
@@ -141,42 +205,5 @@ public interface ITrainService {
         }
         OperationResult<Train> operationResult = getTrainDAO().restoreByNumber(number);
         return convertToServiceResult(operationResult);
-    }
-
-    default ServiceResult<TrainDTO> findById(@NonNull Long id) {
-        try {
-            Transport.validateId(id);
-        } catch (FieldValidationException e) {
-            return new ServiceResult<>(ServiceStatus.ENTITY_NOT_FOUND);
-        }
-        OperationResult<Train> operationResult = getTrainDAO().findById(id);
-        return convertToServiceResult(operationResult);
-    }
-
-    default ServiceResult<TrainDTO> findByNumber(@NonNull String number) {
-        try {
-            number = Train.validateNumber(number);
-        } catch (FieldValidationException e) {
-            return new ServiceResult<>(ServiceStatus.VALIDATION_ERROR, e.getFieldName());
-        }
-        OperationResult<Train> operationResult = getTrainDAO().findByNumber(number, false);
-        return convertToServiceResult(operationResult);
-    }
-
-    default ServiceResult<TrainDTO> findByNumberInDeleted(@NonNull String number) {
-        try {
-            number = Train.validateNumber(number);
-        } catch (FieldValidationException e) {
-            return new ServiceResult<>(ServiceStatus.VALIDATION_ERROR, e.getFieldName());
-        }
-        OperationResult<Train> operationResult = getTrainDAO().findByNumberInDeleted(number);
-        return convertToServiceResult(operationResult);
-    }
-
-    default ServiceResult<TrainDTO> findAndFilterAndSortByQueryParams(TrainQueryParams queryParams) {
-        TrainDAO trainDAO = getTrainDAO();
-        OperationResult<Train> operationResult = trainDAO.findAndFilterAndSortByQueryParams(queryParams);
-
-        return convertToServiceResultWithList(operationResult);
     }
 }

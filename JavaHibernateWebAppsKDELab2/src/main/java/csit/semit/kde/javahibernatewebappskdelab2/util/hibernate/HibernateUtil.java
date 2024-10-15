@@ -15,6 +15,32 @@ import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Utility class for managing Hibernate SessionFactory and Validator instances.
+ * <p>
+ * This class provides methods to initialize and retrieve Hibernate's {@link SessionFactory} and
+ * Jakarta Bean Validation's {@link Validator}. It also handles the loading of Hibernate properties
+ * from a configuration file and ensures proper shutdown of resources.
+ * </p>
+ * <p>
+ * The `HibernateUtil` class includes:
+ * <ul>
+ *   <li>Initialization of {@link SessionFactory} and {@link Validator} in static blocks</li>
+ *   <li>Methods to load Hibernate properties from a configuration file</li>
+ *   <li>Methods to retrieve the {@link SessionFactory} and {@link Validator} instances</li>
+ *   <li>A shutdown method to close the {@link SessionFactory}, {@link StandardServiceRegistry}, and {@link ValidatorFactory}</li>
+ * </ul>
+ * </p>
+ * <p>
+ * This class uses the Singleton pattern to ensure that only one instance of {@link SessionFactory} and {@link Validator} is created.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see SessionFactory
+ * @see Validator
+ * @see StandardServiceRegistry
+ * @since 1.0.0
+ */
 public class HibernateUtil {
     private static final Logger logger = LogManager.getLogger(HibernateUtil.class);
     private static StandardServiceRegistry registry;
@@ -55,9 +81,9 @@ public class HibernateUtil {
     private static void initializeValidator() {
         try {
             validatorFactory = Validation.byDefaultProvider()
-                .configure()
-                .messageInterpolator(new ParameterMessageInterpolator())
-                .buildValidatorFactory();
+                    .configure()
+                    .messageInterpolator(new ParameterMessageInterpolator())
+                    .buildValidatorFactory();
             validator = validatorFactory.getValidator();
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize Validator.", e);

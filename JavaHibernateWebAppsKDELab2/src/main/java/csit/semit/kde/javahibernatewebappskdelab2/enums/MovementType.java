@@ -4,6 +4,32 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
+/**
+ * Enumeration representing different types of train movements.
+ * <p>
+ * The `MovementType` enum includes:
+ * <ul>
+ *   <li>DAILY: Represents daily movements ("щоденні")</li>
+ *   <li>EVEN_DAYS: Represents movements on even days ("парні")</li>
+ *   <li>ODD_DAYS: Represents movements on odd days ("непарні")</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Each enum constant has a display name in Ukrainian, which can be retrieved using the `getDisplayName` method.
+ * </p>
+ * <p>
+ * The `MovementType` enum provides utility methods to:
+ * <ul>
+ *   <li>Get all movement types as an array of display names</li>
+ *   <li>Get a `MovementType` by its display name</li>
+ *   <li>Get a `MovementType` by its index</li>
+ * </ul>
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych
+ * @see java.util.Arrays
+ * @since 1.0.0
+ */
 @Getter
 public enum MovementType {
     DAILY("щоденні"),

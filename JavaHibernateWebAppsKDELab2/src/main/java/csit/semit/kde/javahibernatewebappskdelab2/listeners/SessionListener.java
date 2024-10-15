@@ -5,6 +5,24 @@ import jakarta.servlet.http.HttpSessionListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Listener for HTTP session lifecycle events.
+ * <p>
+ * This listener logs the creation and destruction of HTTP sessions. It captures details such as the session ID when a session is created and logs the session ID when a session is destroyed.
+ * </p>
+ * <p>
+ * The `SessionListener` class includes:
+ * <ul>
+ *   <li>Logging of session creation in the {@code sessionCreated} method</li>
+ *   <li>Logging of session destruction in the {@code sessionDestroyed} method</li>
+ * </ul>
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych
+ * @see HttpSessionListener
+ * @see HttpSessionEvent
+ * @since 1.0.0
+ */
 public class SessionListener implements HttpSessionListener {
 
     private static final Logger logger = LogManager.getLogger(SessionListener.class);

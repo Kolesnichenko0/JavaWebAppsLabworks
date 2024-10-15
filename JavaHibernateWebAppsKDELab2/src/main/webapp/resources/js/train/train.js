@@ -1,4 +1,13 @@
-import { clearErrors, displayError, displayFormError, formatErrorMessage, validateTrainNumber, validateStationName } from './util/train-utils.js';
+import {
+    clearErrors,
+    displayError,
+    displayFormError,
+    formatErrorMessage,
+    validateTrainNumber,
+    validateStationName,
+    calculateArrivalTime
+} from './util/train-utils.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const contextPath = document.querySelector('meta[name="context-path"]').getAttribute('content');
     const trainId = window.location.pathname.split('/').pop();
@@ -9,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteError = document.getElementById('deleteError');
 
     function fetchTrainDetails() {
-        fetch(`${contextPath}/trains/${trainId}`, {
+        fetch(`${contextPath}/trains/${trainId}?ajax=true`, {
             headers: {
                 'Accept': 'application/json'
             }
@@ -34,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <p class="card-text"><strong>Arrival Station:</strong> ${data.arrivalStation}</p>
                                 <p class="card-text"><strong>Movement Type:</strong> ${data.movementType}</p>
                                 <p class="card-text"><strong>Departure Time:</strong> ${data.departureTime}</p>
+                                <p class="card-text"><strong>Arival Time:</strong> ${calculateArrivalTime(data.departureTime, data.duration)}</p>
                                 <p class="card-text"><strong>Duration:</strong> ${data.duration}</p>
                             </div>
                         </div>
@@ -112,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: totalMinutes
         };
 
-        fetch(`${contextPath}/trains/${trainId}`, {
+        fetch(`${contextPath}/trains/${trainId}?ajax=true`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -152,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.status === 500) {
                     return response.text().then(html => {
                         console.error(errorMessage);
-                        // document.body.innerHTML = html;
+                        document.body.innerHTML = html;
                     });
                 }
 
@@ -165,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     deleteTrainBtn.addEventListener('click', () => {
         if (confirm('Are you sure you want to delete this train?')) {
-            fetch(`${contextPath}/trains/${trainId}`, {
+            fetch(`${contextPath}/trains/${trainId}?ajax=true`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -221,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     deleteTrainForeverBtn.addEventListener('click', () => {
         if (confirm('Are you sure you want to delete this train forever?')) {
-            fetch(`${contextPath}/trains/${trainId}`, {
+            fetch(`${contextPath}/trains/${trainId}?ajax=true`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'

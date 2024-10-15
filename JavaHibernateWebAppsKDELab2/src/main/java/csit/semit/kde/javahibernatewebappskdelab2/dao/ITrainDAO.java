@@ -17,6 +17,41 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
+/**
+ * Data Access Object (DAO) interface for managing `Train` entities.
+ * <p>
+ * This interface extends the `EntityDAO` interface and provides additional methods specific to `Train` entities.
+ * It supports operations such as finding trains by various criteria, filtering, sorting, and inserting sample data.
+ * </p>
+ * <p>
+ * The interface includes methods for:
+ * <ul>
+ *   <li>Finding trains by key sets, number, and query parameters</li>
+ *   <li>Filtering and sorting trains based on various criteria</li>
+ *   <li>Inserting sample train data</li>
+ *   <li>Restoring deleted trains by number</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The implementation uses Hibernate for database interactions and supports soft deletion of entities.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see EntityDAO
+ * @see SoftDeletable
+ * @see Train
+ * @see FieldName
+ * @see MovementType
+ * @see OperationStatus
+ * @see TrainQueryParams
+ * @see OperationResult
+ * @see jakarta.persistence.criteria.CriteriaBuilder
+ * @see jakarta.persistence.criteria.CriteriaQuery
+ * @see jakarta.persistence.criteria.Predicate
+ * @see org.hibernate.Session
+ * @see org.hibernate.HibernateException
+ * @since 1.0.0
+ */
 public interface ITrainDAO extends EntityDAO<Train> {
     default OperationResult<Train> findByKeySet(@NonNull Train template, boolean includeDeleted) {
         try {

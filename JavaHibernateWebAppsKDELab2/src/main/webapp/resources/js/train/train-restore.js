@@ -1,4 +1,11 @@
-import { clearErrors, displayFormError, formatErrorMessage, validateTrainNumber } from './util/train-utils.js';
+import {
+    calculateArrivalTime,
+    clearErrors,
+    displayFormError,
+    formatErrorMessage,
+    validateTrainNumber
+} from './util/train-utils.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const trainId = window.location.pathname.split('/').pop();
     const contextPath = document.querySelector('meta[name="context-path"]').getAttribute('content');
@@ -13,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        fetch(`${contextPath}/trains/id?number=${trainNumber}`, {
+        fetch(`${contextPath}/trains/id?number=${encodeURIComponent(trainNumber)}&ajax=true`, {
             headers: {
                 'Accept': 'application/json'
             }
@@ -31,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return response.json().then(data => {
                         console.log(successMessage);
                         if (confirm('Are you sure you want to restore this train?')) {
-                            fetch(`${contextPath}/trains/${data.id}`, {
+                            fetch(`${contextPath}/trains/${data.id}?ajax=true`, {
                                 method: 'PATCH',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -112,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function fetchDeletedTrains() {
-        fetch(`${contextPath}/trains/deleted`, {
+        fetch(`${contextPath}/trains/deleted?ajax=true`, {
             headers: {
                 'Accept': 'application/json'
             }
@@ -145,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <td>${train.arrivalStation}</td>
                                     <td>${train.movementType}</td>
                                     <td>${train.departureTime}</td>
+                                    <td>${calculateArrivalTime(train.departureTime, train.duration)}</td>
                                     <td>${train.duration}</td>
                                 `;
                                 row.addEventListener('click', () => {

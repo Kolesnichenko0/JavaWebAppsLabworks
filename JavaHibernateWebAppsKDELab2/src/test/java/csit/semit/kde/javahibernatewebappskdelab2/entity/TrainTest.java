@@ -14,6 +14,28 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for the {@link Train} entity.
+ * <p>
+ * This class contains unit tests for the {@code Train} entity, focusing on validation of train numbers and station names,
+ * as well as the creation of {@code Train} objects. It uses JUnit 5 for testing and includes nested test classes for
+ * better organization of test cases.
+ * </p>
+ * <p>
+ * The `TrainTest` class includes:
+ * <ul>
+ *   <li>Validation of train numbers</li>
+ *   <li>Validation of station names</li>
+ *   <li>Creation and validation of {@code Train} objects</li>
+ * </ul>
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see Train
+ * @see MovementType
+ * @see FieldName
+ * @since 1.0.0
+ */
 class TrainTest {
 
     @Nested

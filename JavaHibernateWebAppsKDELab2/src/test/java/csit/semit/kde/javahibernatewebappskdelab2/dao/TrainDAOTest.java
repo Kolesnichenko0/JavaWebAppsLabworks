@@ -16,6 +16,29 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for the {@link TrainDAO} class.
+ * <p>
+ * This class contains unit tests for the {@code TrainDAO} class, specifically for the methods that handle CRUD operations
+ * and other database interactions related to the {@link Train} entity. It uses JUnit 5 for testing and includes setup
+ * and teardown methods to initialize and clean up resources.
+ * </p>
+ * <p>
+ * The `TrainDAOTest` class includes:
+ * <ul>
+ *   <li>Setup method to initialize the {@code TrainDAO} instance and truncate the train table</li>
+ *   <li>Teardown method to shut down Hibernate</li>
+ *   <li>Test methods to verify various CRUD operations and other database interactions</li>
+ * </ul>
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see TrainDAO
+ * @see OperationStatus
+ * @see OperationResult
+ * @see HibernateUtil
+ * @since 1.0.0
+ */
 public class TrainDAOTest {
 
     private static TrainDAO trainDAO;
@@ -55,7 +78,6 @@ public class TrainDAOTest {
 
     @Test
     public void testInsert_ValidationError() {
-        // Before you need comment out validation methods in Train entity
         try {
             Train train = new Train("123ІС", "Київ-2a", "Львів", MovementType.DAILY, LocalTime.now(), Duration.ofHours(5));
 

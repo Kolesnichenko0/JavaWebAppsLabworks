@@ -1,5 +1,5 @@
-import { clearErrors, displayError } from './util/train-utils.js';
-import { updateDurationLabels } from './util/duration.js';
+import {calculateArrivalTime, clearErrors, displayError} from './util/train-utils.js';
+import {updateDurationLabels} from './util/duration.js';
 
 window.updateDurationLabels = updateDurationLabels;
 document.addEventListener('DOMContentLoaded', () => {
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function fetchTrains() {
         const urlParams = new URLSearchParams(window.location.search);
-        const fetchUrl = `${contextPath}/trains?${urlParams.toString()}`;
+        const fetchUrl = `${contextPath}/trains?${urlParams.toString()}&ajax=true`;
 
         fetch(fetchUrl, {
             headers: {
@@ -371,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <td>${train.arrivalStation}</td>
             <td>${train.movementType}</td>
             <td>${train.departureTime}</td>
+            <td>${calculateArrivalTime(train.departureTime, train.duration)}</td>
             <td>${train.duration}</td>
         `;
             row.addEventListener('click', () => {

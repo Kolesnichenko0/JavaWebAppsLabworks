@@ -1,4 +1,12 @@
-import { clearErrors, displayError, displayFormError, formatErrorMessage, validateTrainNumber, validateStationName } from './util/train-utils.js';
+import {
+    clearErrors,
+    displayError,
+    displayFormError,
+    formatErrorMessage,
+    validateTrainNumber,
+    validateStationName
+} from './util/train-utils.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const contextPath = document.querySelector('meta[name="context-path"]').getAttribute('content');
     const createTrainForm = document.getElementById('createTrainForm');
@@ -37,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: totalMinutes
         };
 
-        fetch(`${contextPath}/trains`, {
+        fetch(`${contextPath}/trains?ajax=true`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

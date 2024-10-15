@@ -5,6 +5,26 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Set;
 
+/**
+ * Utility class for handling service error messages and HTTP status codes.
+ * <p>
+ * This class provides static methods to generate error messages based on the {@link ServiceResult} and to map
+ * {@link ServiceStatus} to corresponding HTTP status codes. It helps in standardizing the error handling mechanism
+ * across the application.
+ * </p>
+ * <p>
+ * The `ServiceErrorUtil` class includes:
+ * <ul>
+ *   <li>Generating error messages based on the {@link ServiceResult} in the {@code getMessage} method</li>
+ *   <li>Mapping {@link ServiceStatus} to HTTP status codes in the {@code getHttpErrorStatusCode} method</li>
+ * </ul>
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see ServiceResult
+ * @see ServiceStatus
+ * @since 1.0.0
+ */
 public class ServiceErrorUtil {
     public static String getMessage(ServiceResult<?> serviceResult) {
         ServiceStatus status = serviceResult.getStatus();
