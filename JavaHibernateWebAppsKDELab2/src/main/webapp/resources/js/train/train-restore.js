@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (data.length === 0) {
                             deletedTrainTableBody.innerHTML = `
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted no-trains-message">
+                                    <td colspan="7" class="text-center text-muted no-trains-message">
                                         No deleted trains found.
                                     </td>
                                 </tr>`;
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log(successMessage);
                     deletedTrainTableBody.innerHTML = `
                         <tr>
-                            <td colspan="6" class="text-center text-muted no-trains-message">
+                            <td colspan="7" class="text-center text-muted no-trains-message">
                                 No deleted trains found.
                             </td>
                         </tr>`;

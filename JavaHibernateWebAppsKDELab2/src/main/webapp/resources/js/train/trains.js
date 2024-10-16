@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log(successMessage);
                     document.getElementById('trainTableBody').innerHTML = `
                 <tr>
-                    <td colspan="6" class="text-center text-muted no-trains-message">
+                    <td colspan="7" class="text-center text-muted no-trains-message">
                         No trains found. Please change your search or filtering criteria.
                     </td>
                 </tr>`;
