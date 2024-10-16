@@ -153,8 +153,8 @@
                     <th>Arrival Time</th>
                     <th>Duration</th>
                 </tr>
-                </thead>
-                <tbody id="trainTableBody">
+                </thead >
+                <tbody lang="uk" id="trainTableBody">
                 </tbody>
             </table>
         </div>

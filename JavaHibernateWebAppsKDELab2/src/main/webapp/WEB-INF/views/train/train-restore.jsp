@@ -52,7 +52,7 @@
                     <th>Duration</th>
                 </tr>
                 </thead>
-                <tbody id="deletedTrainTableBody">
+                <tbody lang="uk" id="deletedTrainTableBody">
                 </tbody>
             </table>
         </div>
