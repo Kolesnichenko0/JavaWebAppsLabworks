@@ -1,0 +1,12 @@
+.error-image {
+    max-width: 400px;
+    margin: 2rem auto;
+}
+.custom-btn {
+    background-color: #90c695;
+    border-color: #7ba57b;
+}
+.custom-btn:hover {
+    background-color: #7ba57b;
+    border-color: #6a946a;
+}

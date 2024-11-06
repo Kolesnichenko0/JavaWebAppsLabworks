@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Create Train Ticket</title>
+	<base th:href="@{/}">
+	<link rel="icon" th:href="@{/images/favicon.png}" sizes="32x32" type="image/png">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link th:href="@{/css/train-ticket/train-tickets.css}" rel="stylesheet">
+	<script th:src="@{/js/train-ticket/train-ticket-create.js}" type="module" defer></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="partials/header :: header"></header>
+<div class="container mt-4">
+	<div class="card">
+		<div class="card-header">
+			<h5 class="card-title">Create Train Ticket</h5>
+		</div>
+		<div class="card-body">
+			<form id="createTicketForm">
+				<div id="formError" class="alert alert-danger d-none"></div>
+				<div class="mb-3">
+					<label for="trainNumber" class="form-label">Train Number</label>
+					<input type="text" id="trainNumber" class="form-control" th:value="${trainNumber}" placeholder="112ІС" minlength="1" maxlength="6" required>
+				</div>
+				<div class="mb-3">
+					<label for="passengerSurname" class="form-label">Passenger Surname</label>
+					<input type="text" id="passengerSurname" class="form-control" placeholder="Клименко" minlength="1" maxlength="50" required>
+				</div>
+				<div class="mb-3">
+					<label for="passportNumber" class="form-label">Passport Number</label>
+					<input type="text" id="passportNumber" class="form-control" placeholder="СК501844 або 627254904" minlength="1" maxlength="9" required>
+				</div>
+				<div class="mb-3">
+					<label for="departureDate" class="form-label">Departure Date</label>
+					<input type="date" id="departureDate" class="form-control" required>
+				</div>
+				<div class="mb-3">
+					<label for="carriageNumber" class="form-label">Carriage Number</label>
+					<input type="number" id="carriageNumber" class="form-control" placeholder="3" min="1" max="20" required>
+				</div>
+				<div class="mb-3">
+					<label for="seatNumber" class="form-label">Seat Number</label>
+					<input type="number" id="seatNumber" class="form-control" placeholder="12" min="1" max="100" required>
+				</div>
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success">Create</button>
+					<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<footer th:replace="partials/footer :: footer"></footer>
+</body>
+</html>

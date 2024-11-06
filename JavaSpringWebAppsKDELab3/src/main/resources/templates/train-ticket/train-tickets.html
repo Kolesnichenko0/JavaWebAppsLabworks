@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<base th:href="@{/}">
+	<link rel="icon" th:href="@{/images/favicon.png}" sizes="32x32" type="image/png">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+		  crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link th:href="@{/css/train-ticket/train-tickets.css}" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			crossorigin="anonymous"></script>
+	<script th:src="@{/js/train-ticket/train-tickets.js}" type="module" defer></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="partials/header :: header"></header>
+<div class="container mt-4">
+	<div class="d-flex justify-content-between mb-3">
+		<h2 class="mb-0" th:unless="${isForSpecificTrain}">Train Tickets</h2>
+		<h2 class="mb-0" th:if="${isForSpecificTrain}">Tickets for Train: "<span style="color:green"
+																				 id="trainNumber"></span>"</h2>
+		<button id="goToTrainBtn" class="btn btn-primary" th:if="${isForSpecificTrain}">Go to Train</button>
+		<button id="createTicketBtn" class="btn btn-success">Create Ticket</button>
+	</div>
+	<div class="card mb-3">
+		<div class="card-header">
+			<h5 class="card-title">Search Tickets</h5>
+		</div>
+		<div class="card-body">
+			<div class="mb-3">
+				<label for="searchPassengerSurname" class="form-label">Passenger Surname</label>
+				<input type="text" id="searchPassengerSurname" class="form-control" placeholder="Клименко" minlength="3"
+					   maxlength="50">
+			</div>
+			<button id="searchBySurnameBtn" class="btn btn-info mt-2 w-100">Search by Surname</button>
+			<div class="mb-3">
+				<label for="searchPassportNumber" class="form-label">Passport Number</label>
+				<input type="text" id="searchPassportNumber" class="form-control" placeholder="СК501844 або 627254904"
+					   minlength="1" maxlength="9">
+			</div>
+			<button id="searchByPassportBtn" class="btn btn-info mt-2 w-100">Search by Passport</button>
+			<div class="mb-3">
+				<label for="searchDepartureDate" class="form-label">Departure Date</label>
+				<input type="date" id="searchDepartureDate" class="form-control">
+			</div>
+			<button id="searchByDateBtn" class="btn btn-info mt-2 w-100">Search by Date</button>
+			<div class="mb-3" style="display:none;" th:if="${isForSpecificTrain}">
+				<label for="searchCarriageNumber" class="form-label">Carriage Number</label>
+				<input type="number" id="searchCarriageNumber" class="form-control" placeholder="3" min="1" max="20">
+			</div>
+			<button id="searchByDateAndCarriageBtn" style="display:none;" class="btn btn-info mt-2 w-100"
+					th:if="${isForSpecificTrain}">Search by Date & Carriage
+			</button>
+		</div>
+	</div>
+
+	<div class="card mb-3" id="currentStatus">
+		<div class="card-header">
+			<h5 class="card-title">Current Status</h5>
+		</div>
+		<div class="card-body">
+			<div id="currentSearch" class="alert alert-info" role="alert">
+				<strong>Search:</strong> Showing all results
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="card">
+				<div class="card-body">
+					<h5>Filter Options</h5>
+					<div class="mt-3">
+						<label for="filterDateFrom">Departure Date From:</label>
+						<input type="date" id="filterDateFrom" class="form-control">
+						<label for="filterDateTo" class="mt-2">Departure Date To:</label>
+						<input type="date" id="filterDateTo" class="form-control">
+					</div>
+					<div class="d-flex justify-content-between mt-3">
+						<button id="applyFiltersBtn" class="btn btn-success">Apply Filters</button>
+						<button id="resetFiltersBtn" class="btn btn-danger">Reset Filters</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<table class="table table-bordered table-hover">
+				<thead class="table-success">
+				<tr>
+					<th>Passenger Name</th>
+					<th>Passport Number</th>
+					<th>Departure Date</th>
+					<th>Carriage Number</th>
+					<th>Seat Number</th>
+					<th th:unless="${isForSpecificTrain}">Train Number</th>
+				</tr>
+				</thead>
+				<tbody lang="uk" id="ticketsTableBody">
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<footer th:replace="partials/footer :: footer"></footer>
+</body>
+</html>

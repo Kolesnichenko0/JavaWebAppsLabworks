@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<base th:href="@{/}">
+	<link rel="icon" th:href="@{/images/favicon.png}" sizes="32x32" type="image/png">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+		  crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link th:href="@{/css/train-ticket/train-tickets.css}" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			crossorigin="anonymous"></script>
+	<script th:src="@{/js/train-ticket/train-ticket.js}" type="module" defer></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="partials/header :: header"></header>
+<div class="container mt-4">
+	<div class="d-flex justify-content-between mb-3">
+		<h2 class="mb-0">Ticket Details</h2>
+		<button id="goToTrainBtn" class="btn btn-primary">Go to Train</button>
+	</div>
+	<div class="card mb-3">
+		<div class="card-header">
+			<h5 class="card-title">Ticket Information</h5>
+		</div>
+		<div class="card-body">
+			<div id="deleteError" class="alert alert-danger d-none"></div>
+			<div id="ticketDetails" class="mb-3">
+			</div>
+			<div class="d-flex justify-content-between">
+				<button id="deleteTicketBtn" class="btn btn-danger">Delete</button>
+			</div>
+		</div>
+	</div>
+	<div class="card mb-3">
+		<div class="card-header">
+			<h5 class="card-title">Update Ticket</h5>
+		</div>
+		<div class="card-body">
+			<form id="updateTicketForm">
+				<div id="formError" class="alert alert-danger d-none"></div>
+				<div class="mb-3">
+					<label for="updatePassengerSurname" class="form-label">Passenger Surname</label>
+					<input type="text" id="updatePassengerSurname" class="form-control" placeholder="Клименко"
+						   minlength="3" maxlength="50">
+				</div>
+				<div class="mb-3">
+					<label for="updatePassportNumber" class="form-label">Passport Number</label>
+					<input type="text" id="updatePassportNumber" class="form-control"
+						   placeholder="СК501844 або 627254904" minlength="1" maxlength="9">
+				</div>
+				<div class="mb-3">
+					<label for="updateCarriageNumber" class="form-label">Carriage Number</label>
+					<input type="number" id="updateCarriageNumber" class="form-control" placeholder="3" min="1"
+						   max="20">
+				</div>
+				<div class="mb-3">
+					<label for="updateSeatNumber" class="form-label">Seat Number</label>
+					<input type="number" id="updateSeatNumber" class="form-control" placeholder="12" min="1" max="100">
+				</div>
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success">Update Ticket</button>
+					<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<footer th:replace="partials/footer :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${statusCode + ' Error'}">Error</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+		  crossorigin="anonymous">
+	<link rel="icon" th:href="@{/images/favicon.png}" sizes="32x32" type="image/png">
+	<link th:href="@{/css/error/general-error.css}" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header th:fragment="header" class="bg-success text-white py-3">
+	<div class="container d-flex justify-content-between align-items-center">
+		<a th:href="@{/home}" class="d-flex align-items-center text-white text-decoration-none">
+			<img th:src="@{/images/logo.png}" alt="Logo" class="me-2"/>
+			<h1 class="mb-0">Train Management System</h1>
+		</a>
+
+		<nav>
+			<ul class="nav">
+				<li class="nav-item">
+					<a th:href="@{/project-description}" class="nav-link text-white">Project Description</a>
+				</li>
+				<li class="nav-item">
+					<a th:href="@{/home}" class="nav-link text-white">Home</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</header>
+<main class="container my-5 flex-grow-1">
+	<div class="text-center">
+		<h1 class="mb-4" th:text="${statusCode + ' - ' + message}">Error</h1>
+
+		<div class="error-image">
+			<!-- Add different images based on error type -->
+			<img th:if="${statusCode == 404}" th:src="@{/images/404.png}"
+				 alt="404 Error" class="img-fluid"/>
+			<img th:if="${statusCode == 500}" th:src="@{/images/500.png}"
+				 alt="500 Error" class="img-fluid"/>
+		</div>
+
+		<p class="lead mb-4">
+                <span th:if="${statusCode == 404}">
+                    The page you are looking for might have been removed, had its name changed,
+                    or is temporarily unavailable.
+                </span>
+			<span th:if="${statusCode == 500}">
+                    There was a problem on the server while processing your request.
+                    We are doing our best to resolve it as soon as possible.
+                </span>
+			<span th:if="${statusCode != 404 and statusCode != 500}">
+                    An unexpected error occurred. Please try again later.
+                </span>
+		</p>
+
+		<div class="text-center mt-4">
+			<a th:href="@{/home}" class="btn btn-success btn-lg custom-btn">
+				Return to Home Page
+			</a>
+		</div>
+	</div>
+</main>
+
+<div th:replace="~{partials/footer :: footer}"></div>
+</body>
+</html>
