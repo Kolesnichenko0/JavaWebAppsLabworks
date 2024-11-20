@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('trainNumber').textContent = data.number;
                     });
                 }
-                if (response.status === 500 || response.status === 404) {
+                if (response.status === 500 || response.status === 404 || response.status === 403) {
                     handleError(contextPath, errorMessage, response.status);
                     return;
                 }
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                if (response.status === 500) {
+                if (response.status === 500 || response.status === 403) {
                     handleError(contextPath, errorMessage, response.status);
                     return;
                 }

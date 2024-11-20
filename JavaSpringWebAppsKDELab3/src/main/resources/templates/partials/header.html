@@ -1,8 +1,9 @@
 <!-- header.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<meta charset="UTF-8">
+<!--	<script th:src="@{/js/partials/header.js}" type="module" defer></script>-->
 </head>
 <body>
 <header th:fragment="header" class="bg-success text-white py-3">
@@ -23,6 +24,9 @@
 				<li class="nav-item" th:if="${isLoggedIn}">
 					<a th:href="@{/train-tickets}" class="nav-link text-white">Manage Tickets</a>
 				</li>
+				<li class="nav-item" th:if="${isLoggedIn}">
+					<a th:href="@{/users/create}" class="nav-link text-white">Create an employee</a>
+				</li>
 				<li class="nav-item">
 					<a th:href="@{/home}" class="nav-link text-white">Home</a>
 				</li>
@@ -30,8 +34,13 @@
 					<a th:href="@{/login}" class="nav-link text-white">Login</a>
 				</li>
 				<li class="nav-item" th:if="${isLoggedIn}">
-					<a th:href="@{/logout}" class="nav-link text-white">Logout</a>
+					<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?');">
+						<button type="submit" class="btn btn-link nav-link text-white" style="padding: 0; border: none; background: none;">
+							Logout
+						</button>
+					</form>
 				</li>
+
 			</ul>
 		</nav>
 	</div>

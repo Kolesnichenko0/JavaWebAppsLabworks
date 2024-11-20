@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Create User</title>
+	<base th:href="@{/}">
+	<link rel="icon" th:href="@{/images/favicon.png}" sizes="32x32" type="image/png">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+	<link th:href="@{/css/user/users.css}" rel="stylesheet">
+	<script th:src="@{/js/user/user-create.js}" type="module" defer></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="partials/header :: header"></header>
+<div class="container mt-4">
+	<div class="card">
+		<div class="card-header">
+			<h5 class="card-title">Create User</h5>
+		</div>
+		<div class="card-body">
+			<form id="createUserForm">
+				<div id="formError" class="alert alert-danger d-none"></div>
+				<div class="mb-3">
+					<label for="username" class="form-label">Username</label>
+					<input type="text" id="username" class="form-control" placeholder="Username" minlength="3"
+						   maxlength="20" required>
+				</div>
+				<div class="mb-3">
+					<label for="email" class="form-label">Email</label>
+					<input type="email" id="email" class="form-control" placeholder="Email" required>
+				</div>
+				<div class="mb-3">
+					<label for="name" class="form-label">Name</label>
+					<input type="text" id="name" class="form-control" placeholder="Name" required>
+				</div>
+				<div class="mb-3">
+					<label for="role" class="form-label">Role</label>
+					<select id="role" class="form-select" required>
+						<option th:each="role : ${T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).values()}"
+								th:value="${role.name()}"
+								th:text="${role.name().toLowerCase()}"></option>
+					</select>
+				</div>
+				<div class="mb-3 position-relative">
+					<label for="password" class="form-label">Password</label>
+					<div class="input-group">
+						<input type="password" id="password" class="form-control" placeholder="Password" minlength="8" maxlength="30" required>
+						<span id="togglePassword" class="input-group-text" style="cursor: pointer;">
+            				<i class="bi bi-eye-slash" id="passwordIcon"></i>
+        				</span>
+					</div>
+				</div>
+				<div class="mb-3 position-relative">
+					<label for="confirmPassword" class="form-label">Confirm Password</label>
+					<div class="input-group">
+						<input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" minlength="8" maxlength="30" required>
+						<span id="toggleConfirmPassword" class="input-group-text" style="cursor: pointer;">
+            				<i class="bi bi-eye-slash" id="confirmPasswordIcon"></i>
+        				</span>
+					</div>
+				</div>
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success">Create</button>
+					<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<footer th:replace="partials/footer :: footer"></footer>
+</body>
+</html>

@@ -54,6 +54,8 @@ public class GlobalErrorController implements ErrorController {
 
     private String prepareErrorResponse(int statusCode, Model model) {
         String message = switch (statusCode) {
+            case 401 -> "Unauthorized";
+            case 403 -> "Forbidden";
             case 404 -> "Page Not Found";
             case 500 -> "Internal Server Error";
             default -> "Unknown Error";

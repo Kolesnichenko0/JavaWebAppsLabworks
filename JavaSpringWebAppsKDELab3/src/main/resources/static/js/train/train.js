@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
 
-                    if (response.status === 500) {
+                    if (response.status === 500 || response.status === 403) {
                         handleError(contextPath, errorMessage, response.status);
                         return;
                     }

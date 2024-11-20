@@ -1,5 +1,7 @@
 package csit.semit.kde.javaspringwebappskdelab3.controller.main;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
     @GetMapping({"/home", "/"})
     public String home(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Current authorities: " + auth.getAuthorities());
         boolean isLoggedIn = true;
         model.addAttribute("isLoggedIn", isLoggedIn);
         return "main/home";

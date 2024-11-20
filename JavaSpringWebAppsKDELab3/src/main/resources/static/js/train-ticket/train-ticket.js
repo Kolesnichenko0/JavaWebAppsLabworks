@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         displayFormError(formatErrorMessage(errorMessage));
                         return;
                     }
-                    if (response.status === 500) {
+                    if (response.status === 500 || response.status === 403) {
                         handleError(contextPath, errorMessage, response.status);
                         return;
                     }
