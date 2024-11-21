@@ -18,29 +18,32 @@
 				<li class="nav-item">
 					<a th:href="@{/project-description}" class="nav-link text-white">Project Description</a>
 				</li>
-				<li class="nav-item" th:if="${isLoggedIn}">
-					<a th:href="@{/trains}" class="nav-link text-white">Manage Trains</a>
+				<li class="nav-item" sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).USER.name())">
+					<a th:href="@{/trains}" class="nav-link text-white">Trains</a>
 				</li>
-				<li class="nav-item" th:if="${isLoggedIn}">
-					<a th:href="@{/train-tickets}" class="nav-link text-white">Manage Tickets</a>
+				<li class="nav-item" sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).USER.name())">
+					<a th:href="@{/train-tickets}" class="nav-link text-white">Tickets</a>
 				</li>
-				<li class="nav-item" th:if="${isLoggedIn}">
+				<li class="nav-item" sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).ADMIN.name())">
 					<a th:href="@{/users/create}" class="nav-link text-white">Create an employee</a>
 				</li>
 				<li class="nav-item">
 					<a th:href="@{/home}" class="nav-link text-white">Home</a>
 				</li>
-				<li class="nav-item" th:if="${!isLoggedIn}">
+				<li class="nav-item" sec:authorize="!isAuthenticated()">
 					<a th:href="@{/login}" class="nav-link text-white">Login</a>
 				</li>
-				<li class="nav-item" th:if="${isLoggedIn}">
-					<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?');">
-						<button type="submit" class="btn btn-link nav-link text-white" style="padding: 0; border: none; background: none;">
-							Logout
-						</button>
-					</form>
+				<li class="nav-item user-profile" sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 10px;">
+					<a th:href="@{/users/profile}" style="display: flex; align-items: center; background-color: rgba(255, 255, 255, 0.2); border-radius: 25px; padding: 5px 15px; margin-left: 15px; text-decoration: none;">
+						<div style="display: flex; flex-direction: column; align-items: flex-end; margin-right: 10px;">
+							<span th:text="${#authentication.name}" class="username text-white" style="font-weight: bold; margin-bottom: 2px;"></span>
+						</div>
+						<img th:src="@{${#authentication.authorities[0].authority.equals('ROLE_ADMIN') ? '/images/role/admin_icon.png' :
+            (#authentication.authorities[0].authority.equals('ROLE_TRAIN_MANAGER') ? '/images/role/train_manager_icon.png' :
+            (#authentication.authorities[0].authority.equals('ROLE_CASHIER') ? '/images/role/cashier_icon.png' :
+            '/images/role/user_icon.png'))}}" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-left: 10px;" />
+					</a>
 				</li>
-
 			</ul>
 		</nav>
 	</div>

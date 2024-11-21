@@ -65,7 +65,7 @@ class UserTest {
 
         @ParameterizedTest(name = "Valid email = {0}")
         @DisplayName("Should pass for valid emails")
-        @ValueSource(strings = {"user@example.com", "user.name@example.com", "user_name@example.com", "user-name@example.com"})
+        @ValueSource(strings = {"user@gmail.com", "user.name@gmail.com", "user_name@gmail.com", "user-name@gmail.com"})
         void testValidEmails(String email) {
             assertDoesNotThrow(() -> User.validateEmail(email),
                     "Email should be valid.");
@@ -73,7 +73,7 @@ class UserTest {
 
         @ParameterizedTest(name = "Invalid email = {0}")
         @DisplayName("Should throw exception for invalid emails")
-        @ValueSource(strings = {"userexample.com", "user@.com", "user@com", "user@com.", "user@com.c", "user@com..com"})
+        @ValueSource(strings = {"userexample.com", "user@.com", "user@example.com", "user@com.", "user@com.c", "user@com..com"})
         void testInvalidEmails(String email) {
             Exception exception = assertThrows(FieldValidationException.class,
                     () -> User.validateEmail(email));
@@ -133,14 +133,14 @@ class UserTest {
         @DisplayName("Should create a User object and validate its fields")
         void testUserObjectCreation() {
             String username = "user_123";
-            String email = "user@example.com";
+            String email = "user@gmail.com";
             String password = "Password1!";
             String name = "Іван";
             Role role = Role.USER;
 
             User user = new User(username, email, password, name, role);
             assertEquals("user_123", user.getUsername());
-            assertEquals("user@example.com", user.getEmail());
+            assertEquals("user@gmail.com", user.getEmail());
             assertEquals("Password1!", user.getPassword());
             assertEquals("Іван", user.getName());
             assertEquals(Role.USER, user.getRole());

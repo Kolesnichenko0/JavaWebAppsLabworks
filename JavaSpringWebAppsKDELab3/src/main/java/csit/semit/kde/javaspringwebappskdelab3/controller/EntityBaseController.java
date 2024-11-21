@@ -67,22 +67,16 @@ public abstract class EntityBaseController {
 
     @GetMapping("/{id}")
     public String getById(@PathVariable Long id, Model model) {
-        boolean isLoggedIn = true;
-        model.addAttribute("isLoggedIn", isLoggedIn);
         return getBasePath() + "/" + getEntityName();
     }
 
     @GetMapping("/create")
     public String create(@RequestParam(required = false) String trainNumber, Model model) {
-        boolean isLoggedIn = true;
-        model.addAttribute("isLoggedIn", isLoggedIn);
         return getBasePath() + "/" + getEntityName() + "-create";
     }
 
     @GetMapping
     public String list(Model model) {
-        boolean isLoggedIn = true;
-        model.addAttribute("isLoggedIn", isLoggedIn);
         return getBasePath() + "/" + getEntityName() + "s";
     }
 

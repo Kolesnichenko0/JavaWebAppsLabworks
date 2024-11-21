@@ -18,7 +18,6 @@ public class MyRoleHierarchy implements RoleHierarchy {
         Set<GrantedAuthority> reachableAuthorities = new HashSet<>(authorities);
 
         for (GrantedAuthority authority : authorities) {
-            System.out.println(authority.getAuthority());
             if (("ROLE_" + Role.CASHIER.name()).equals(authority.getAuthority()) || ("ROLE_" + Role.TRAIN_MANAGER.name()).equals(authority.getAuthority())) {
                 reachableAuthorities.add(new SimpleGrantedAuthority("ROLE_" + Role.USER.name()));
             }
@@ -31,7 +30,6 @@ public class MyRoleHierarchy implements RoleHierarchy {
                 );
             }
         }
-        System.out.println(reachableAuthorities);
         return reachableAuthorities;
     }
 }

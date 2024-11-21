@@ -30,12 +30,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserDTO userDTO = result.getEntity();
         String password = userService.findPasswordById(userDTO.getId());
 
-//        String[] roles = switch (userDTO.getRole().name()) {
-//            case "ADMIN" -> new String[]{Role.USER.name(), Role.ADMIN.name()};
-//            case "CASHIER" -> new String[]{Role.USER.name(), Role.CASHIER.name()};
-//            case "TRAIN_MANAGER" -> new String[]{Role.USER.name(), Role.TRAIN_MANAGER.name()};
-//            default -> new String[]{userDTO.getRole().name()};
-//        }; //TODO
 //        Role[] roles = switch (userDTO.getRole()) {
 //            case ADMIN -> new Role[]{Role.USER, Role.ADMIN};
 //            case CASHIER -> new Role[]{Role.USER, Role.CASHIER};

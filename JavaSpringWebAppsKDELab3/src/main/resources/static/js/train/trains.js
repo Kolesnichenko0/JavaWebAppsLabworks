@@ -1,6 +1,6 @@
 import {calculateArrivalTime} from './util/train-utils.js';
 import {formatDuration, parseDuration, updateDurationLabels} from './util/duration.js';
-import { handleError, clearErrors, displayError } from '../util/error/error-handler.js';
+import {handleError, clearErrors, displayError} from '../util/error/error-handler.js';
 
 
 window.updateDurationLabels = updateDurationLabels;
@@ -32,13 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = input.id.replace('filter', '');
         movementTypeTranslations[id] = input.nextElementSibling.querySelector('span').textContent;
     });
-
-    createTrainBtn.addEventListener('click', () => {
-        window.location.href = contextPath + '/trains/create';
-    });
+    if (createTrainBtn) {
+        createTrainBtn.addEventListener('click', () => {
+            window.location.href = contextPath + '/trains/create';
+        });
+    }
 
     if (currentStatusElement) {
-        currentStatusElement.scrollIntoView({ behavior: 'smooth' });
+        currentStatusElement.scrollIntoView({behavior: 'smooth'});
     }
 
     const urlParams = new URLSearchParams(window.location.search);

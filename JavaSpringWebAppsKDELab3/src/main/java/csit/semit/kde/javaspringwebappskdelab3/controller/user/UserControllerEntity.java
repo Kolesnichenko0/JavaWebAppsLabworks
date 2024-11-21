@@ -33,8 +33,11 @@ public class UserControllerEntity {
 
     @GetMapping("/create")
     public String createUser(Model model) {
-        boolean isLoggedIn = true;
-        model.addAttribute("isLoggedIn", isLoggedIn);
         return "user/user-create";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model) {
+        return "user/profile";
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +22,7 @@
 		<h2 class="mb-0" th:if="${isForSpecificTrain}">Tickets for Train: "<span style="color:green"
 																				 id="trainNumber"></span>"</h2>
 		<button id="goToTrainBtn" class="btn btn-primary" th:if="${isForSpecificTrain}">Go to Train</button>
-		<button id="createTicketBtn" class="btn btn-success">Create Ticket</button>
+		<button id="createTicketBtn" class="btn btn-success" sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).CASHIER.name())">Create Ticket</button>
 	</div>
 	<div class="card mb-3">
 		<div class="card-header">

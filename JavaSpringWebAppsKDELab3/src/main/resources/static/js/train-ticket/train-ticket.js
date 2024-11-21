@@ -12,6 +12,8 @@ import {
 } from './util/train-ticket-utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
     const contextPath = document.querySelector('base').href.replace(/\/$/, '');
     const ticketId = window.location.pathname.split('/').pop();
     let trainId;
@@ -75,99 +77,107 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
     `;
-
-        updatePassengerSurname.value = data.passengerSurname;
-        updatePassportNumber.value = data.passportNumber;
-        updateCarriageNumber.value = data.carriageNumber;
-        updateSeatNumber.value = data.seatNumber;
+        if (updatePassengerSurname) {
+            updatePassengerSurname.value = data.passengerSurname;
+            updatePassportNumber.value = data.passportNumber;
+            updateCarriageNumber.value = data.carriageNumber;
+            updateSeatNumber.value = data.seatNumber;
+        }
 
         goToTrainBtn.addEventListener('click', () => {
             window.location.href = `${contextPath}/trains/${data.trainId}`;
         });
-        cancelBtn.addEventListener('click', () => {
-            window.location.href = `${contextPath}/trains/${trainId}/tickets`;
-        });
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                window.location.href = `${contextPath}/trains/${trainId}/tickets`;
+            });
+        }
     }
 
-    updateTicketForm.addEventListener('submit', (event) => {
-        if (confirm('Are you sure you want to update this ticket?')) {
-            event.preventDefault();
-            clearErrors();
+    if (updateTicketForm) {
+        updateTicketForm.addEventListener('submit', (event) => {
+            if (confirm('Are you sure you want to update this ticket?')) {
+                event.preventDefault();
+                clearErrors();
 
-            const passengerSurname = updatePassengerSurname.value;
-            const passportNumber = updatePassportNumber.value;
-            const carriageNumber = updateCarriageNumber.value;
-            const seatNumber = updateSeatNumber.value;
+                const passengerSurname = updatePassengerSurname.value;
+                const passportNumber = updatePassportNumber.value;
+                const carriageNumber = updateCarriageNumber.value;
+                const seatNumber = updateSeatNumber.value;
 
-            if (!validatePassengerSurname(passengerSurname, 'updatePassengerSurname') ||
-                !validatePassportNumber(passportNumber, 'updatePassportNumber') ||
-                !validateCarriageNumber(carriageNumber, 'updateCarriageNumber') ||
-                !validateSeatNumber(seatNumber, 'updateSeatNumber')) {
-                return;
-            }
-
-            const ticketData = {
-                passengerSurname: passengerSurname,
-                passportNumber: passportNumber,
-                carriageNumber: carriageNumber,
-                seatNumber: seatNumber
-            };
-
-            console.log(ticketData);
-
-            fetch(`${contextPath}/api/train-tickets/${ticketId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(ticketData)
-            })
-                .then(response => {
-                    const errorMessage = response.headers.get('Error-Message');
-                    if (response.status === 200) {
-                        window.location.reload();
-                        return;
-                    }
-                    if (response.status === 400) {
-                        displayFormError(formatErrorMessage(errorMessage));
-                        return;
-                    }
-
-                    if (response.status === 409) {
-                        displayFormError(formatErrorMessage(errorMessage));
-                        return;
-                    }
-
-                    if (response.status === 422) {
-                        displayFormError(formatErrorMessage(errorMessage));
-                        return;
-                    }
-                    if (response.status === 500 || response.status === 403) {
-                        handleError(contextPath, errorMessage, response.status);
-                        return;
-                    }
-                    throw new Error(`Unexpected response status: ${response.status}`);
-                })
-                .catch(error => {
-                    console.error('Error updating ticket:', error);
-                });
-        }
-    });
-
-    deleteTicketBtn.addEventListener('click', () => {
-        if (confirm('Are you sure you want to delete this ticket forever?')) {
-            fetch(`${contextPath}/api/train-tickets/${ticketId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
+                if (!validatePassengerSurname(passengerSurname, 'updatePassengerSurname') ||
+                    !validatePassportNumber(passportNumber, 'updatePassportNumber') ||
+                    !validateCarriageNumber(carriageNumber, 'updateCarriageNumber') ||
+                    !validateSeatNumber(seatNumber, 'updateSeatNumber')) {
+                    return;
                 }
-            })
-                .then(handleDeleteResponse)
-                .catch(error => {
-                    console.error('Error deleting ticket forever:', error);
-                });
-        }
-    });
+
+                const ticketData = {
+                    passengerSurname: passengerSurname,
+                    passportNumber: passportNumber,
+                    carriageNumber: carriageNumber,
+                    seatNumber: seatNumber
+                };
+
+                console.log(ticketData);
+
+                fetch(`${contextPath}/api/train-tickets/${ticketId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify(ticketData)
+                })
+                    .then(response => {
+                        const errorMessage = response.headers.get('Error-Message');
+                        if (response.status === 200) {
+                            window.location.reload();
+                            return;
+                        }
+                        if (response.status === 400) {
+                            displayFormError(formatErrorMessage(errorMessage));
+                            return;
+                        }
+
+                        if (response.status === 409) {
+                            displayFormError(formatErrorMessage(errorMessage));
+                            return;
+                        }
+
+                        if (response.status === 422) {
+                            displayFormError(formatErrorMessage(errorMessage));
+                            return;
+                        }
+                        if (response.status === 500 || response.status === 403) {
+                            handleError(contextPath, errorMessage, response.status);
+                            return;
+                        }
+                        throw new Error(`Unexpected response status: ${response.status}`);
+                    })
+                    .catch(error => {
+                        console.error('Error updating ticket:', error);
+                    });
+            }
+        });
+    }
+    if (deleteTicketBtn) {
+        deleteTicketBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete this ticket forever?')) {
+                fetch(`${contextPath}/api/train-tickets/${ticketId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    }
+                })
+                    .then(handleDeleteResponse)
+                    .catch(error => {
+                        console.error('Error deleting ticket forever:', error);
+                    });
+            }
+        });
+    }
 
     function handleDeleteResponse(response) {
         const errorMessage = response.headers.get('Error-Message');

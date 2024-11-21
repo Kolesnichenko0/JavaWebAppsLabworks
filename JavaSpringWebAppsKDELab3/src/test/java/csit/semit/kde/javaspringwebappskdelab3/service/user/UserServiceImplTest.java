@@ -38,7 +38,7 @@ public class UserServiceImplTest {
     private UserCreateDTO createValidUserDTO() {
         return new UserCreateDTO(
                 "user_123",
-                "user@example.com",
+                "user@gmail.com",
                 "Password1!",
                 "Іван",
                 Role.USER
@@ -92,7 +92,7 @@ public class UserServiceImplTest {
         UserCreateDTO userDTO = createValidUserDTO();
         userService.save(userDTO);
 
-        ServiceResult<UserDTO> result = userService.findByKeySet("user_123", "user@example.com");
+        ServiceResult<UserDTO> result = userService.findByKeySet("user_123", "user@gmail.com");
 
         assertEquals(ServiceStatus.SUCCESS, result.getStatus());
         assertNotNull(result.getEntity());
@@ -116,7 +116,7 @@ public class UserServiceImplTest {
 
         UserCreateDTO user2 = createValidUserDTO();
         user2.setUsername("user_124");
-        user2.setEmail("user2@example.com");
+        user2.setEmail("user2@gmail.com");
         users.add(user2);
 
         ServiceResult<UserDTO> result = userService.saveAll(users);

@@ -10,7 +10,10 @@ import csit.semit.kde.javaspringwebappskdelab3.util.result.service.ServiceStatus
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -103,6 +106,22 @@ public class UserRestController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody UserCreateDTO userCreateDTO) {
         ServiceResult<UserDTO> result = userService.save(userCreateDTO);
+        if (result.getStatus() == ServiceStatus.SUCCESS) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Success-Message", "Resource created successfully");
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .headers(headers)
+                    .body(result.getEntity());
+        }
+        return ServiceResultHandler.handleServiceResult(result);
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<?> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        ServiceResult<UserDTO> result = userService.findByUsername(username);
         return ServiceResultHandler.handleServiceResult(result);
     }
 }

@@ -57,7 +57,7 @@ class UserRegexTest {
 
         @ParameterizedTest(name = "Valid email = {0}")
         @DisplayName("Should pass for valid emails")
-        @ValueSource(strings = {"user@example.com", "user.name@example.com", "user_name@example.com", "user-name@example.com"})
+        @ValueSource(strings = {"user@gmail.com", "user.name@gmail.com", "user_name@gmail.com", "user-name@gmail.com"})
         void testValidEmails(String email) {
             assertTrue(email.matches(User.EMAIL_REGEX), "Email should be valid.");
         }

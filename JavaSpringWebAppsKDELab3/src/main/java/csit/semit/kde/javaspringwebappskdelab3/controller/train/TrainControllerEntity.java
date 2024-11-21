@@ -51,9 +51,7 @@ public class TrainControllerEntity extends EntityBaseController {
 
     @GetMapping("/{id}/tickets")
     public String trainTickets(Model model) {
-        boolean isLoggedIn = true;
         boolean isForSpecificTrain = true;
-        model.addAttribute("isLoggedIn", isLoggedIn);
         model.addAttribute("isForSpecificTrain", isForSpecificTrain);
         return "train-ticket/train-tickets";
     }

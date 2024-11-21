@@ -41,6 +41,8 @@ public interface UserService {
 
     ServiceResult<UserDTO> findByUsernameOrEmail(String usernameOrEmail);
 
+    ServiceResult<UserDTO> findByUsername(String username);
+
     ServiceResult<UserDTO> save(UserCreateDTO userCreateDTO);
 
     ServiceResult<UserDTO> saveAll(List<UserCreateDTO> userCreateDTOs);

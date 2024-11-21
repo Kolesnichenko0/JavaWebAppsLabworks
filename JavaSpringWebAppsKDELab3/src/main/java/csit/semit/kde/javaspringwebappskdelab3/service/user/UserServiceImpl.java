@@ -1,10 +1,13 @@
 package csit.semit.kde.javaspringwebappskdelab3.service.user;
 
+import csit.semit.kde.javaspringwebappskdelab3.dto.train.TrainDTO;
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserCreateDTO;
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserDTO;
+import csit.semit.kde.javaspringwebappskdelab3.entity.train.Train;
 import csit.semit.kde.javaspringwebappskdelab3.entity.user.User;
 import csit.semit.kde.javaspringwebappskdelab3.enums.user.Role;
 import csit.semit.kde.javaspringwebappskdelab3.repository.user.UserRepository;
+import csit.semit.kde.javaspringwebappskdelab3.util.mapper.train.TrainMapper;
 import csit.semit.kde.javaspringwebappskdelab3.util.mapper.user.UserMapper;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.entity.FieldValidationException;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.service.ServiceResult;
@@ -77,6 +80,18 @@ public class UserServiceImpl implements UserService {
         }
 
         return new ServiceResult<>(ServiceStatus.SUCCESS);
+    }
+
+    @Override
+    public ServiceResult<UserDTO> findByUsername(String username) {
+        try {
+            username = User.validateUsername(username);
+        } catch (FieldValidationException e) {
+            return new ServiceResult<>(ServiceStatus.VALIDATION_ERROR, e.getFieldName());
+        }
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.map(value -> new ServiceResult<>(ServiceStatus.SUCCESS, UserMapper.toDTO(value)))
+                .orElseGet(() -> new ServiceResult<>(ServiceStatus.ENTITY_NOT_FOUND));
     }
 
     @Override

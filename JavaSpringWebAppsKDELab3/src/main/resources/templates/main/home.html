@@ -13,6 +13,9 @@
 
 <main class="container my-5 flex-grow-1 d-flex flex-column justify-content-center">
 	<div class="text-center">
+		<div th:if="${successMessage}" class="alert alert-success" role="alert">
+			<span th:text="${successMessage}"></span>
+		</div>
 		<h1 class="mb-4">Welcome to Train Management System</h1>
 		<p class="lead mb-4">Your reliable partner in railway management solutions</p>
 		<p class="lead">Experience the future of train management with our comprehensive system.</p>

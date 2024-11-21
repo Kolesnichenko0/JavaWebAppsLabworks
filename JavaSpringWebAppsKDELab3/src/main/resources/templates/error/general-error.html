@@ -11,25 +11,8 @@
 	<link th:href="@{/css/error/general-error.css}" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100">
-<header th:fragment="header" class="bg-success text-white py-3">
-	<div class="container d-flex justify-content-between align-items-center">
-		<a th:href="@{/home}" class="d-flex align-items-center text-white text-decoration-none">
-			<img th:src="@{/images/logo.png}" alt="Logo" class="me-2"/>
-			<h1 class="mb-0">Train Management System</h1>
-		</a>
+<div th:replace="~{partials/header :: header}"></div>
 
-		<nav>
-			<ul class="nav">
-				<li class="nav-item">
-					<a th:href="@{/project-description}" class="nav-link text-white">Project Description</a>
-				</li>
-				<li class="nav-item">
-					<a th:href="@{/home}" class="nav-link text-white">Home</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-</header>
 <main class="container my-5 flex-grow-1">
 	<div class="text-center">
 		<h1 class="mb-4" th:text="${statusCode + ' - ' + message}">Error</h1>

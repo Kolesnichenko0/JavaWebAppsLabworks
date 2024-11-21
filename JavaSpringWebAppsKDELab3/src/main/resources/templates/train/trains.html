@@ -19,7 +19,7 @@
 <div class="container mt-4">
 	<div class="d-flex justify-content-between mb-3">
 		<h2 class="mb-0">Trains</h2>
-		<button id="createTrainBtn" class="btn btn-success" sec:authorize="hasRole('ROLE_TRAIN_MANAGER')">Create Train</button>
+		<button id="createTrainBtn" class="btn btn-success" sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).TRAIN_MANAGER.name())">Create Train</button>
 	</div>
 	<div class="card mb-3">
 		<div class="card-header">

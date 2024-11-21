@@ -49,8 +49,7 @@ public class User implements Serializable {
 
     public static final String USERNAME_REGEX = "^[a-zA-Z0-9_]{3,20}$";
     public static final String NAME_REGEX = "^([А-ЗЙ-ЩЮЯЇІЄ][а-щьюяїієґ[\\']]+(\\-[А-ЗЙ-ЩЮЯЇІЄ][а-щьюяїієґ[\\']]+)?)$";
-    public static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9-.]+$";
-
+    public static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@gmail\\.com$";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -62,7 +61,7 @@ public class User implements Serializable {
     private String username;
 
     @NotNull
-    @Email(message = "Email should be valid")
+    @Email(regexp = EMAIL_REGEX, message = "Email should be valid")
     @Check(constraints = "REGEXP_LIKE(email, '" + EMAIL_REGEX + "', 'c')")
     @Column(name = "email", nullable = false, unique = true, length = 50)
     private String email;

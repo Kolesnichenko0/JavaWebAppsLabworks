@@ -14,6 +14,8 @@ import {
 } from '../util/error/error-handler.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
     const contextPath = document.querySelector('base').href.replace(/\/$/, '');
     const createUserForm = document.getElementById('createUserForm');
     const cancelBtn = document.getElementById('cancelBtn');
@@ -50,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(`${contextPath}/api/users`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
             },
             body: JSON.stringify(userData)
         })
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.status === 201) {
                     console.log(successMessage);
-                    window.location.href = `${contextPath}/home`;
+                    window.location.href = `${contextPath}/home?successMessage=employee-added`;
                     return;
                 }
 

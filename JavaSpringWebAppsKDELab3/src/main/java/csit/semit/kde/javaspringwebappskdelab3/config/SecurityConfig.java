@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 
 @Configuration
 @EnableWebSecurity
@@ -31,22 +32,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                                 // Public endpoints
                                 .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
                                 .requestMatchers("/", "/home", "/login", "/project-description", "/error", "/error/{errorCode}").permitAll()
 
-                                // ADMIN role endpoints
-                                .requestMatchers("/trains/create", "/train-tickets/create", "/users/create").hasRole(Role.ADMIN.name())
+                                // Requires authentication
+                                .requestMatchers("/profile").authenticated()
 
-                                // USER role endpoints
+                                // ROLE endpoints
+                                .requestMatchers("/trains/create").hasRole(Role.TRAIN_MANAGER.name())
+                                .requestMatchers("/train-tickets/create").hasRole(Role.CASHIER.name())
+                                .requestMatchers("/users/create").hasRole(Role.ADMIN.name())
 //                              .requestMatchers("/trains", "/trains/{id}", "/trains/{id}/tickets").hasRole(Role.USER.name())
                                 .requestMatchers("/trains/**").hasRole(Role.USER.name())
 //                               .requestMatchers("/train-tickets", "/train-tickets/{id}").hasRole(Role.USER.name())
                                 .requestMatchers("/train-tickets/**").hasRole(Role.USER.name())
 
-                                // USER role REST API endpoints
+                                //ROLE REST API endpoints
+                                .requestMatchers(HttpMethod.GET, "/api/users/current").authenticated()
+
 //                                .requestMatchers(HttpMethod.GET, "/api/trains/{id}/tickets").hasRole(Role.USER.name())
 //                                .requestMatchers(HttpMethod.GET, "/api/trains/{id}").hasRole(Role.USER.name())
 //                                .requestMatchers(HttpMethod.GET, "/api/trains").hasRole(Role.USER.name())
@@ -56,14 +62,13 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/trains/**").hasRole(Role.USER.name())
                                 .requestMatchers(HttpMethod.GET, "/api/train-tickets/**").hasRole(Role.USER.name())
 
-
-                                // ADMIN role REST API endpoints
-                                .requestMatchers(HttpMethod.PUT, "/api/trains/{id}").hasAnyRole(Role.TRAIN_MANAGER.name(), Role.ADMIN.name())
-                                .requestMatchers(HttpMethod.DELETE, "/api/trains/{id}").hasAnyRole(Role.TRAIN_MANAGER.name(), Role.ADMIN.name())
-                                .requestMatchers(HttpMethod.POST, "/api/trains").hasAnyRole(Role.TRAIN_MANAGER.name(), Role.ADMIN.name())
-                                .requestMatchers(HttpMethod.PATCH, "/api/train-tickets/{id}").hasAnyRole(Role.CASHIER.name(), Role.ADMIN.name())
-                                .requestMatchers(HttpMethod.DELETE, "/api/train-tickets/{id}").hasAnyRole(Role.CASHIER.name(), Role.ADMIN.name())
-                                .requestMatchers(HttpMethod.POST, "/api/train-tickets").hasAnyRole(Role.CASHIER.name(), Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT, "/api/trains/{id}").hasAnyRole(Role.TRAIN_MANAGER.name())
+                                .requestMatchers(HttpMethod.DELETE, "/api/trains/{id}").hasAnyRole(Role.TRAIN_MANAGER.name())
+                                .requestMatchers(HttpMethod.POST, "/api/trains").hasAnyRole(Role.TRAIN_MANAGER.name())
+                                .requestMatchers(HttpMethod.PATCH, "/api/train-tickets/{id}").hasAnyRole(Role.CASHIER.name())
+                                .requestMatchers(HttpMethod.DELETE, "/api/train-tickets/{id}").hasAnyRole(Role.CASHIER.name())
+                                .requestMatchers(HttpMethod.POST, "/api/train-tickets").hasAnyRole(Role.CASHIER.name())
+                                .requestMatchers(HttpMethod.POST, "/api/users").hasAnyRole(Role.ADMIN.name())
 
                                 // All other requests require authentication
                                 .anyRequest().authenticated()
@@ -98,7 +103,6 @@ public class SecurityConfig {
                         .maxSessionsPreventsLogin(false)
                         .expiredUrl("/login?sessionInvalidated=true")
                 );
-
 
         return http.build();
     }

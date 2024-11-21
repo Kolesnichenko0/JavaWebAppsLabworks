@@ -3,6 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 	<title>Create User</title>
 	<base th:href="@{/}">
 	<link rel="icon" th:href="@{/images/favicon.png}" sizes="32x32" type="image/png">
@@ -45,7 +47,7 @@
 				</div>
 				<div class="mb-3 position-relative">
 					<label for="password" class="form-label">Password</label>
-					<div class="input-group">
+					<div class="input-group" id="passwordInput">
 						<input type="password" id="password" class="form-control" placeholder="Password" minlength="8" maxlength="30" required>
 						<span id="togglePassword" class="input-group-text" style="cursor: pointer;">
             				<i class="bi bi-eye-slash" id="passwordIcon"></i>
@@ -54,7 +56,7 @@
 				</div>
 				<div class="mb-3 position-relative">
 					<label for="confirmPassword" class="form-label">Confirm Password</label>
-					<div class="input-group">
+					<div class="input-group" id="confirmPasswordInput">
 						<input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" minlength="8" maxlength="30" required>
 						<span id="toggleConfirmPassword" class="input-group-text" style="cursor: pointer;">
             				<i class="bi bi-eye-slash" id="confirmPasswordIcon"></i>

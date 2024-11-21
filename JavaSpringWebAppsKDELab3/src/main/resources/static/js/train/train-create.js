@@ -12,6 +12,8 @@ import {
 } from '../util/error/error-handler.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
     const contextPath = document.querySelector('base').href.replace(/\/$/, '');
     const createTrainForm = document.getElementById('createTrainForm');
     const cancelBtn = document.getElementById('cancelBtn');
@@ -53,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(`${contextPath}/api/trains`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
             },
             body: JSON.stringify(trainData)
         })

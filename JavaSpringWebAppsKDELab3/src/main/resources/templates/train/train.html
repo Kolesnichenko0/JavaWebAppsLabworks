@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 	<title>Train Details</title>
 	<base th:href="@{/}">
 	<link rel="icon" th:href="@{/images/favicon.png}" sizes="32x32" type="image/png">
@@ -13,6 +15,10 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header th:replace="partials/header :: header"></header>
+<select lang="uk" id="movementTypeEnum" class="form-select d-none" required>
+	<option th:each="movement : ${T(csit.semit.kde.javaspringwebappskdelab3.enums.train.MovementType).values()}"
+			th:value="${movement.name()}" th:text="${#strings.capitalize(movement.displayName.toLowerCase())}"></option>
+</select>
 <div class="container mt-4">
 	<div class="card">
 		<div class="card-header">
@@ -24,11 +30,11 @@
 			</div>
 			<div class="d-flex justify-content-between">
 				<button id="viewTicketsBtn" class="btn btn-primary">View Tickets</button>
-				<button id="deleteTrainBtn" class="btn btn-danger">Delete</button>
+				<button id="deleteTrainBtn" class="btn btn-danger" sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).TRAIN_MANAGER.name())">Delete</button>
 			</div>
 		</div>
 	</div>
-	<div class="card mt-4">
+	<div class="card mt-4" sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).TRAIN_MANAGER.name())">
 		<div class="card-header">
 			<h5 class="card-title">Update Train</h5>
 		</div>

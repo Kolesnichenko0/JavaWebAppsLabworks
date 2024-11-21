@@ -57,14 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
         goToTrainBtn.addEventListener('click', () => {
             window.location.href = `${contextPath}/trains/${currentTrainId}`;
         });
-        createTicketBtn.addEventListener('click', () => {
-            const trainNumber = document.getElementById('trainNumber').textContent;
-            window.location.href = `${contextPath}/train-tickets/create?trainNumber=${trainNumber}`;
-        });
+        if(createTicketBtn) {
+            createTicketBtn.addEventListener('click', () => {
+                const trainNumber = document.getElementById('trainNumber').textContent;
+                window.location.href = `${contextPath}/train-tickets/create?trainNumber=${trainNumber}`;
+            });
+        }
     } else {
-        createTicketBtn.addEventListener('click', () => {
-            window.location.href = `${contextPath}/train-tickets/create`;
-        });
+        if (createTicketBtn) {
+            createTicketBtn.addEventListener('click', () => {
+                window.location.href = `${contextPath}/train-tickets/create`;
+            });
+        }
     }
 
 

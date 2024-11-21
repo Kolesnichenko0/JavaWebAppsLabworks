@@ -181,8 +181,6 @@ public class TrainTicketRestControllerEntity extends EntityBaseRestController<Tr
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePartial(@PathVariable Long id, @RequestBody Map<String, Object> updates, HttpServletRequest request) {
-        System.out.println("Request: " + request.getMethod() + " " + request.getRequestURI());
-        System.out.println("Updates: " + updates);
         ServiceResult<TrainTicketDTO> result = trainTicketService.updatePartial(id, updates);
         return ServiceResultHandler.handleServiceResult(result);
     }

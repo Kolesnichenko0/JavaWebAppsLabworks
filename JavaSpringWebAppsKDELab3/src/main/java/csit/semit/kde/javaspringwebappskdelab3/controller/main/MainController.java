@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * MainController is a Spring MVC controller that handles requests for the home page and project description page.
@@ -15,15 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
  *     <li>{@code /project-description} - Displays the project description page with a model attribute indicating the user is not logged in.</li>
  * </ul>
  * <p>
- * The {@code home} method sets a model attribute {@code isLoggedIn} to {@code true} and returns the view name {@code main/home}.
- * The {@code projectDescription} method sets a model attribute {@code isLoggedIn} to {@code false} and returns the view name {@code main/project-description}.
- * </p>
- * <p>
  * This controller uses the {@link org.springframework.stereotype.Controller} annotation to indicate that it is a Spring MVC controller.
  * The {@link org.springframework.web.bind.annotation.GetMapping} annotation is used to map HTTP GET requests to handler methods.
- * </p>
- * <p>
- * In a real-world application, the {@code isLoggedIn} attribute would typically be determined based on the user's session or authentication status.
  * </p>
  *
  * @author Kolesnychenko Denys Yevhenovych CS-222a
@@ -35,18 +29,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
     @GetMapping({"/home", "/"})
-    public String home(Model model) {
+    public String home(@RequestParam(value = "successMessage", required = false) String successMessage, Model model) {
+        if ("employee-added".equals(successMessage)) {
+            model.addAttribute("successMessage", "Employee successfully added");
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Current authorities: " + auth.getAuthorities());
-        boolean isLoggedIn = true;
-        model.addAttribute("isLoggedIn", isLoggedIn);
         return "main/home";
     }
 
     @GetMapping("/project-description")
     public String projectDescription(Model model) {
-        boolean isLoggedIn = false;
-        model.addAttribute("isLoggedIn", isLoggedIn);
         return "main/project-description";
     }
 }

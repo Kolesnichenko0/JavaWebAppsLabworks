@@ -14,13 +14,13 @@ export function validateUsername(username) {
 }
 
 export function validateEmail(email) {
-    const EMAIL_REGEX = /^[A-Za-z0-9_.-]+@[A-Za-z0-9-.]+$/;
+    const EMAIL_REGEX = /^[A-Za-z0-9_.-]+@gmail\.com$/;
     if (!email) {
         displayError('email', 'Email cannot be empty');
         return false;
     }
     if (!EMAIL_REGEX.test(email)) {
-        displayError('email', 'Email should be valid');
+        displayError('email', 'Email should be valid with @gmail.com domain');
         return false;
     }
     return true;
@@ -41,27 +41,27 @@ export function validateName(name) {
 
 export function validatePassword(password) {
     if (!password) {
-        displayError('password', 'Password cannot be empty');
+        displayError('passwordInput', 'Password cannot be empty');
         return false;
     }
     if (password.length < 8 || password.length > 30) {
-        displayError('password', 'Password must be between 8 and 30 characters long');
+        displayError('passwordInput', 'Password must be between 8 and 30 characters long');
         return false;
     }
     if (!password.match(/.*[A-Z].*/)) {
-        displayError('password', 'Password must contain at least one uppercase letter');
+        displayError('passwordInput', 'Password must contain at least one uppercase letter');
         return false;
     }
     if (!password.match(/.*[a-z].*/)) {
-        displayError('password', 'Password must contain at least one lowercase letter');
+        displayError('passwordInput', 'Password must contain at least one lowercase letter');
         return false;
     }
     if (!password.match(/.*\d.*/)) {
-        displayError('password', 'Password must contain at least one digit');
+        displayError('passwordInput', 'Password must contain at least one digit');
         return false;
     }
     if (!password.match(/.*[!@#$%^&*(),.?:{}|<>].*/)) {
-        displayError('password', 'Password must contain at least one special character');
+        displayError('passwordInput', 'Password must contain at least one special character');
         return false;
     }
     return true;
@@ -69,7 +69,7 @@ export function validatePassword(password) {
 
 export function validateConfirmPassword(password, confirmPassword) {
     if (password !== confirmPassword) {
-        displayError('confirmPassword', 'Passwords do not match');
+        displayError('confirmPasswordInput', 'Passwords do not match');
         return false;
     }
     return true;
