@@ -1,13 +1,9 @@
 package csit.semit.kde.javaspringwebappskdelab3.service.user;
 
-import csit.semit.kde.javaspringwebappskdelab3.dto.train.TrainDTO;
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserCreateDTO;
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserDTO;
-import csit.semit.kde.javaspringwebappskdelab3.entity.train.Train;
 import csit.semit.kde.javaspringwebappskdelab3.entity.user.User;
-import csit.semit.kde.javaspringwebappskdelab3.enums.user.Role;
 import csit.semit.kde.javaspringwebappskdelab3.repository.user.UserRepository;
-import csit.semit.kde.javaspringwebappskdelab3.util.mapper.train.TrainMapper;
 import csit.semit.kde.javaspringwebappskdelab3.util.mapper.user.UserMapper;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.entity.FieldValidationException;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.service.ServiceResult;
@@ -26,6 +22,71 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of {@link UserService} for managing user-related operations.
+ * <p>
+ * This service provides functionality to manage user data, including finding users by various criteria,
+ * saving new users, updating existing users, and deleting users. It interacts with the {@link UserRepository}
+ * to perform database operations and uses {@link UserMapper} to convert between entity and DTO objects.
+ * </p>
+ * <p>
+ * The `UserServiceImpl` class includes:
+ * <ul>
+ *   <li>Dependency injection of {@link UserRepository} and {@link PasswordEncoder}.</li>
+ *   <li>Methods to find users by username, email, or both.</li>
+ *   <li>Methods to save and update user information, ensuring unique fields are validated.</li>
+ *   <li>Methods to delete users individually or in bulk.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Example usage:
+ * <pre>
+ * {@code
+ * @Autowired
+ * private UserService userService;
+ *
+ * public void someMethod() {
+ *     UserCreateDTO userCreateDTO = new UserCreateDTO();
+ *     // Set userCreateDTO properties
+ *     ServiceResult<UserDTO> result = userService.save(userCreateDTO);
+ *     // Handle the result
+ * }
+ * }
+ * </pre>
+ * </p>
+ * <p>
+ * Dependencies:
+ * <ul>
+ *   <li>{@link UserRepository}</li>
+ *   <li>{@link PasswordEncoder}</li>
+ *   <li>{@link UserMapper}</li>
+ *   <li>{@link UserDTO}</li>
+ *   <li>{@link UserCreateDTO}</li>
+ *   <li>{@link ServiceResult}</li>
+ *   <li>{@link ServiceStatus}</li>
+ *   <li>{@link FieldValidationException}</li>
+ *   <li>{@link ConstraintViolationException}</li>
+ *   <li>{@link UserFieldName}</li>
+ * </ul>
+ * </p>
+ * <p>
+ * This class is annotated with {@link Service} to indicate that it's a Spring service component.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see UserService
+ * @see UserRepository
+ * @see PasswordEncoder
+ * @see UserMapper
+ * @see UserDTO
+ * @see UserCreateDTO
+ * @see ServiceResult
+ * @see ServiceStatus
+ * @see FieldValidationException
+ * @see ConstraintViolationException
+ * @see UserFieldName
+ * @since 1.0.0
+ */
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -177,6 +238,7 @@ public class UserServiceImpl implements UserService {
             return new ServiceResult<>(ServiceStatus.VALIDATION_ERROR, fieldName);
         }
     }
+
     @Override
     public String findPasswordById(Long userId) {
         return userRepository.findById(userId)

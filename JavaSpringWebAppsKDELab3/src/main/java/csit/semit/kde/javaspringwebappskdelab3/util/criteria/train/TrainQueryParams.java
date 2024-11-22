@@ -1,5 +1,7 @@
 package csit.semit.kde.javaspringwebappskdelab3.util.criteria.train;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import csit.semit.kde.javaspringwebappskdelab3.enums.train.MovementType;
 import lombok.Getter;
 import lombok.ToString;
@@ -35,6 +37,7 @@ import java.util.Set;
  */
 @Getter
 @ToString
+@JsonDeserialize(builder = TrainQueryParams.Builder.class)
 public class TrainQueryParams {
     private String searchingNumber;
     private String searchingArrivalStation;
@@ -69,6 +72,7 @@ public class TrainQueryParams {
                 && sortedByTrainNumberAsc == null && sortedByDurationAsc == null && sortedByDepartureTimeAsc == null;
     }
 
+    @JsonPOJOBuilder(withPrefix = "")
     public static class Builder {
         private String searchingNumber;
         private String searchingArrivalStation;

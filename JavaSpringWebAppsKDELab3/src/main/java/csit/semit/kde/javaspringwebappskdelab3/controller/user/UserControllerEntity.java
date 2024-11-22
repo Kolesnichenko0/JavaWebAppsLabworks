@@ -21,10 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * <p>
  * This controller uses Spring MVC annotations to map requests and handle them appropriately.
  * </p>
- * <p>
- * Author: Kolesnychenko Denys Yevhenovych CS-222a
- * </p>
  *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @since 1.0.0
  */
 @Controller

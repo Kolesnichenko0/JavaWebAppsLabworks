@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @see User
  * @since 1.0.0
+ * @author Kolesnychenko Denys Yevhenovych
  */
 class UserRegexTest {
 

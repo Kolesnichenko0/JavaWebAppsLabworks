@@ -18,6 +18,51 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for the UserServiceImpl.
+ * <p>
+ * This class contains unit tests for the UserServiceImpl implementation, focusing on various user-related operations.
+ * The tests ensure that the service methods function correctly when creating, validating, and retrieving user entities.
+ * </p>
+ * <p>
+ * The main functionalities tested in this class include:
+ * <ul>
+ *   <li>Creating a new user and verifying the successful creation.</li>
+ *   <li>Handling duplicate user creation attempts.</li>
+ *   <li>Validating user email and password during creation.</li>
+ *   <li>Finding users by key set (username and email) and by username or email.</li>
+ *   <li>Saving multiple user entities and handling duplicate entries in bulk operations.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The tests utilize the following components:
+ * <ul>
+ *   <li>{@link UserServiceImpl} - The service implementation being tested.</li>
+ *   <li>{@link UserRepository} - The repository for accessing user data.</li>
+ *   <li>{@link PasswordEncoder} - The encoder for hashing and verifying passwords.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The tests are executed within a Spring Boot test context to leverage dependency injection and other Spring features.
+ * </p>
+ * <p>
+ * Each test method is annotated with {@link Test} to indicate that it is a test case. The {@link BeforeEach} annotation
+ * is used to set up the test environment by clearing the user repository before each test.
+ * </p>
+ * <p>
+ * The test methods use assertions from the {@link org.junit.jupiter.api.Assertions} class to verify the expected outcomes.
+ * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
+ * @see UserServiceImpl
+ * @see UserRepository
+ * @see PasswordEncoder
+ * @see org.junit.jupiter.api.Assertions
+ * @see org.junit.jupiter.api.BeforeEach
+ * @see org.junit.jupiter.api.Test
+ * @see org.springframework.boot.test.context.SpringBootTest
+ * @since 1.0.0
+ */
 @SpringBootTest
 public class UserServiceImplTest {
 

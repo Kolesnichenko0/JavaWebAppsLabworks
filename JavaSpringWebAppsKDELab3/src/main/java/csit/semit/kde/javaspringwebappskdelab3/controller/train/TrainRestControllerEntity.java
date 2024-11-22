@@ -2,9 +2,14 @@ package csit.semit.kde.javaspringwebappskdelab3.controller.train;
 
 import csit.semit.kde.javaspringwebappskdelab3.controller.EntityBaseController;
 import csit.semit.kde.javaspringwebappskdelab3.controller.EntityBaseRestController;
+import csit.semit.kde.javaspringwebappskdelab3.dto.train.TrainExportRequestDTO;
 import csit.semit.kde.javaspringwebappskdelab3.dto.train.TrainDTO;
+import csit.semit.kde.javaspringwebappskdelab3.dto.trainticket.TrainTicketDTO;
+import csit.semit.kde.javaspringwebappskdelab3.dto.trainticket.TrainTicketExportRequestDTO;
 import csit.semit.kde.javaspringwebappskdelab3.enums.train.MovementType;
+import csit.semit.kde.javaspringwebappskdelab3.service.train.TrainExportService;
 import csit.semit.kde.javaspringwebappskdelab3.service.train.TrainService;
+import csit.semit.kde.javaspringwebappskdelab3.service.trainticket.TrainTicketExportService;
 import csit.semit.kde.javaspringwebappskdelab3.service.trainticket.TrainTicketService;
 import csit.semit.kde.javaspringwebappskdelab3.util.criteria.train.TrainQueryParams;
 import csit.semit.kde.javaspringwebappskdelab3.util.criteria.trainticket.TrainTicketQueryParams;
@@ -16,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -62,10 +68,15 @@ public class TrainRestControllerEntity extends EntityBaseRestController<TrainDTO
     private final TrainService trainService;
     private final TrainTicketService trainTicketService;
 
+    private final TrainExportService trainExportService;
+    private final TrainTicketExportService trainTicketExportService;
+
     @Autowired
-    public TrainRestControllerEntity(TrainService trainService, TrainTicketService trainTicketService) {
+    public TrainRestControllerEntity(TrainService trainService, TrainTicketService trainTicketService, TrainExportService trainExportService, TrainTicketExportService trainTicketExportService) {
         this.trainService = trainService;
         this.trainTicketService = trainTicketService;
+        this.trainExportService = trainExportService;
+        this.trainTicketExportService = trainTicketExportService;
     }
 
     @Override
@@ -233,5 +244,18 @@ public class TrainRestControllerEntity extends EntityBaseRestController<TrainDTO
         }
     }
 
+    @PostMapping("/export")
+    public ResponseEntity<?> exportTrains(@RequestBody TrainExportRequestDTO request, Authentication authentication) {
+        String username = authentication.getName();
+        ServiceResult<TrainDTO> exportResult = trainExportService.exportAndSendTrains(request, username);
+        return ServiceResultHandler.handleServiceResult(exportResult);
+    }
 
+    @PostMapping("/{id}/tickets/export")
+    public ResponseEntity<?> exportTrainTickets(@RequestBody TrainTicketExportRequestDTO request,
+                                                Authentication authentication, @PathVariable Long id) {
+        String username = authentication.getName();
+        ServiceResult<TrainTicketDTO> exportResult = trainTicketExportService.exportAndSendTrainTickets(request, id, username);
+        return ServiceResultHandler.handleServiceResult(exportResult);
+    }
 }

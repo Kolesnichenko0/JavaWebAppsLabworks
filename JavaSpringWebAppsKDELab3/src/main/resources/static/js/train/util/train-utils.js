@@ -37,8 +37,6 @@ export function validateStationName(station, elementId) {
         station = station.charAt(0).toUpperCase() + station.slice(1);
     }
 
-    console.log(station);
-
     if (!STATION_REGEX.test(station)) {
         displayError(elementId, 'Station name can include ukrainian letters, spaces, hyphens, numbers, and parentheses.');
         return false;

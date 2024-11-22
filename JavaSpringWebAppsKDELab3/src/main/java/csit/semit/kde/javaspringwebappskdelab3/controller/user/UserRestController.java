@@ -75,10 +75,8 @@ import java.net.URI;
  *   <li>Handles service result statuses and responds with appropriate HTTP status codes and messages.</li>
  * </ul>
  * </p>
- * <p>
- * Author: Kolesnychenko Denys Yevhenovych CS-222a
- * </p>
  *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @see UserService
  * @see ServiceResult
  * @see ServiceResultHandler

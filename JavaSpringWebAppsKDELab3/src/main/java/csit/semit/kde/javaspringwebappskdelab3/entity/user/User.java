@@ -26,10 +26,8 @@ import java.io.Serializable;
  *   <li>Annotations for JPA entity mapping and Lombok for boilerplate code generation</li>
  * </ul>
  * </p>
- * <p>
- * Author: Kolesnychenko Denys Yevhenovych CS-222a
- * </p>
  *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @since 1.0.0
  */
 @Entity

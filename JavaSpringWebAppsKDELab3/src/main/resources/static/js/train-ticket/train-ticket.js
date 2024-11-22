@@ -119,8 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     seatNumber: seatNumber
                 };
 
-                console.log(ticketData);
-
                 fetch(`${contextPath}/api/train-tickets/${ticketId}`, {
                     method: 'PATCH',
                     headers: {

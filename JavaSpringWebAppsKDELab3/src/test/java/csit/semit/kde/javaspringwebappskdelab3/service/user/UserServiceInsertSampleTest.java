@@ -2,8 +2,6 @@ package csit.semit.kde.javaspringwebappskdelab3.service.user;
 
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserCreateDTO;
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserDTO;
-import csit.semit.kde.javaspringwebappskdelab3.entity.user.User;
-import csit.semit.kde.javaspringwebappskdelab3.enums.user.Role;
 import csit.semit.kde.javaspringwebappskdelab3.repository.user.UserRepository;
 import csit.semit.kde.javaspringwebappskdelab3.util.reader.user.UserDataReader;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.service.ServiceResult;
@@ -32,9 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *   <li>Verifying the successful insertion of user entities.</li>
  * </ul>
  * </p>
- * <p>
- * Author: Kolesnychenko Denys Yevhenovych CS-222a
- * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @since 1.0.0
  */
 @SpringBootTest

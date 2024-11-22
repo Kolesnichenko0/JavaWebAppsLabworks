@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Data Export Notification</title>
+	<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .header {
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .content {
+            padding: 10px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+	</style>
+</head>
+<body>
+<div class="container">
+	<div class="header">
+		<h2>Data Export Notification</h2>
+	</div>
+	<div class="content">
+		<p>Dear <strong th:text="${name}">User</strong>,</p>
+		<div th:if="${trainInfo}">
+			<p th:text="${trainInfo}"></p>
+		</div>
+		<p>Please find attached the exported <strong th:text="${dataType}">train data</strong> in <strong
+				th:text="${format}">EXCEL</strong> format.</p>
+		<p>If you have any questions, feel free to contact us.</p>
+		<p>Best regards,<br/>Train Management System</p>
+	</div>
+	<div class="footer">
+		<p>&copy; 2024 Train Management System. All rights reserved.</p>
+	</div>
+</div>
+</body>
+</html>

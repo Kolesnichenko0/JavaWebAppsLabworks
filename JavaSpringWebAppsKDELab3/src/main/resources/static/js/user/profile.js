@@ -7,14 +7,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         const user = await response.json();
 
-        // Populate profile details
         document.getElementById('profileName').textContent = user.name || '--';
         document.getElementById('profileUsername').textContent = user.username || '--';
         document.getElementById('profileEmail').textContent = user.email || '--';
         document.getElementById('profileRole').textContent = (user.role || '--').toLowerCase();
     } catch (error) {
         console.error('Error fetching user profile:', error);
-        // Optional: Display error message to user
         const profileCard = document.querySelector('.card-body');
         profileCard.innerHTML = `
             <div class="alert alert-danger" role="alert">

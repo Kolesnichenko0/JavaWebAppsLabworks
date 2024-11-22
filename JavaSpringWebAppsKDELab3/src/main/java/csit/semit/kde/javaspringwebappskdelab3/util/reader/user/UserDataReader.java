@@ -35,9 +35,8 @@ import java.util.List;
  * }
  * </pre>
  * </p>
- * <p>
- * Author: Kolesnychenko Denys Yevhenovych CS-222a
- * </p>
+ *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @since 1.0.0
  */
 public class UserDataReader {

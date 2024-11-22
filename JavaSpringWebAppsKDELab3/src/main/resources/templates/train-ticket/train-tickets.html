@@ -8,6 +8,8 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 		  crossorigin="anonymous">
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<link th:href="@{/css/train-ticket/train-tickets.css}" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -22,8 +24,53 @@
 		<h2 class="mb-0" th:if="${isForSpecificTrain}">Tickets for Train: "<span style="color:green"
 																				 id="trainNumber"></span>"</h2>
 		<button id="goToTrainBtn" class="btn btn-primary" th:if="${isForSpecificTrain}">Go to Train</button>
-		<button id="createTicketBtn" class="btn btn-success" sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).CASHIER.name())">Create Ticket</button>
+		<button id="exportTicketsBtn" class="btn btn-secondary ms-2"
+				sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).USER.name())"
+				data-bs-toggle="modal" data-bs-target="#exportTicketsModal">
+			Export Tickets
+		</button>
+		<button id="createTicketBtn" class="btn btn-success"
+				sec:authorize="hasRole(T(csit.semit.kde.javaspringwebappskdelab3.enums.user.Role).CASHIER.name())">
+			Create Ticket
+		</button>
 	</div>
+
+	<div class="modal fade" id="exportTicketsModal" tabindex="-1" aria-labelledby="exportTicketsModalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<form id="exportTicketsForm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exportTicketsModalLabel">Export Tickets</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="mb-3">
+							<label for="exportTicketsFormat" class="form-label">Select Export Format</label>
+							<select class="form-select" id="exportTicketsFormat" required>
+								<option th:each="format : ${T(csit.semit.kde.javaspringwebappskdelab3.enums.export.ExportFormat).values()}"
+										th:if="${format.name() != 'PDF'}"
+										th:value="${format.name()}"
+										th:text="${format.name()}"
+										th:selected="${format.name() == 'EXCEL'}">
+								</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Export</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div id="exportTicketsAlert" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+		<strong>Success!</strong> Exported tickets have been sent to your email.
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
 	<div class="card mb-3">
 		<div class="card-header">
 			<h5 class="card-title">Search Tickets</h5>

@@ -26,10 +26,8 @@ import lombok.NonNull;
  * <p>
  * This class uses Lombok annotations to generate boilerplate code such as getters, setters, constructors, and `toString` method.
  * </p>
- * <p>
- * Author: Kolesnychenko Denys Yevhenovych CS-222a
- * </p>
  *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @see Role
  * @see Data
  * @see NoArgsConstructor

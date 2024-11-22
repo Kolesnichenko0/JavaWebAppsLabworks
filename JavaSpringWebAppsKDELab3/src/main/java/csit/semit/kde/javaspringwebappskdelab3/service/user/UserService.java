@@ -1,6 +1,5 @@
 package csit.semit.kde.javaspringwebappskdelab3.service.user;
 
-import csit.semit.kde.javaspringwebappskdelab3.dto.train.TrainDTO;
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserCreateDTO;
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserDTO;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.service.ServiceResult;
@@ -28,10 +27,8 @@ import java.util.List;
  *   <li>{@link ServiceResult}</li>
  * </ul>
  * </p>
- * <p>
- * Author: Kolesnychenko Denys Yevhenovych CS-222a
- * </p>
  *
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @see UserDTO
  * @see ServiceResult
  * @since 1.0.0

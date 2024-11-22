@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * and any relevant data or error messages.
  * </p>
  *
- * @autor Kolesnychenko Denys Yevhenovych CS-222a
+ * @author Kolesnychenko Denys Yevhenovych CS-222a
  * @see csit.semit.kde.javaspringwebappskdelab3.dto.trainticket.TrainTicketDTO
  * @see csit.semit.kde.javaspringwebappskdelab3.entity.trainticket.TrainTicket
  * @see csit.semit.kde.javaspringwebappskdelab3.repository.trainticket.TrainTicketRepository

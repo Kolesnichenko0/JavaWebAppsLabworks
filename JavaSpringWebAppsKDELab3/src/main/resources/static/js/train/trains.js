@@ -6,7 +6,8 @@ import {handleError, clearErrors, displayError} from '../util/error/error-handle
 window.updateDurationLabels = updateDurationLabels;
 document.addEventListener('DOMContentLoaded', () => {
     const contextPath = document.querySelector('base').href.replace(/\/$/, '');
-
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
     const searchByNumberBtn = document.getElementById('searchByNumberBtn');
     const searchByDepartureBtn = document.getElementById('searchByDepartureBtn');
     const searchByArrivalBtn = document.getElementById('searchByArrivalBtn');
@@ -26,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetSortBtn = document.getElementById('resetSortBtn');
     const currentStatusElement = document.getElementById('currentStatus');
     const createTrainBtn = document.getElementById('createTrainBtn');
+    const exportTrainsBtn = document.getElementById('exportTrainsBtn');
+    const exportForm = document.getElementById('exportForm');
+    const exportAlert = document.getElementById('exportAlert');
     const movementTypeTranslations = {};
 
     document.querySelectorAll('.form-check-input').forEach(input => {
@@ -403,4 +407,116 @@ document.addEventListener('DOMContentLoaded', () => {
     displayCurrentSearch();
     displayCurrentFilter();
     fetchTrains();
+
+    if (exportForm) {
+        exportForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            clearErrors();
+
+            const exportFormat = document.getElementById('exportFormat').value;
+
+            const currentUrlParams = new URLSearchParams(window.location.search);
+
+            const exportRequest = buildTrainExportRequestDTO(exportFormat, currentUrlParams);
+
+            fetch(`${contextPath}/api/trains/export`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify(exportRequest)
+            })
+                .then(response => {
+                    if (response.status === 204) {
+                        alert('Export failed: No data to export.');
+                    } else {
+                        exportAlert.classList.remove('d-none');
+                        exportAlert.classList.add('show');
+                        const exportModalElement = document.getElementById('exportModal');
+                        const exportModal = bootstrap.Modal.getInstance(exportModalElement);
+                        exportModal.hide();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during export:', error);
+                    alert('An error occurred while exporting data.');
+                });
+        });
+
+        function minutesToISODuration(minutes) {
+            return `PT${minutes}M`;
+        }
+
+        function buildTrainExportRequestDTO(format, urlParams) {
+            const queryParams = {};
+
+            if (urlParams.has('qNumber')) {
+                queryParams.searchingNumber = urlParams.get('qNumber');
+            }
+            if (urlParams.has('qDeparture')) {
+                queryParams.searchingDepartureStation = urlParams.get('qDeparture');
+            }
+            if (urlParams.has('qArrival')) {
+                queryParams.searchingArrivalStation = urlParams.get('qArrival');
+            }
+            if (urlParams.has('fMovementType')) {
+                const movementTypes = urlParams.get('fMovementType').split('T');
+                const reverseMovementTypeTranslations = Object.fromEntries(
+                    Object.entries(movementTypeTranslations).map(([key, value]) => [value, key])
+                );
+
+                queryParams.filteringMovementTypes = movementTypes.map(type => reverseMovementTypeTranslations[type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()]);
+            }
+            if (urlParams.has('fDepTimeFrom')) {
+                const from = urlParams.get('fDepTimeFrom').replace('-', ':');
+                queryParams.filteringFrom = from;
+            }
+            if (urlParams.has('fDepTimeTo')) {
+                const to = urlParams.get('fDepTimeTo').replace('-', ':');
+                queryParams.filteringTo = to;
+            }
+            if (urlParams.has('fMinDuration')) {
+                const minDuration = parseInt(urlParams.get('fMinDuration'), 10);
+                queryParams.filteringMinDuration = minutesToISODuration(minDuration);
+            }
+            if (urlParams.has('fMaxDuration')) {
+                const maxDuration = parseInt(urlParams.get('fMaxDuration'), 10);
+                queryParams.filteringMaxDuration = minutesToISODuration(maxDuration);
+            }
+            if (urlParams.has('sortBy')) {
+                const sortBy = urlParams.get('sortBy');
+                switch (sortBy) {
+                    case 'numberAsc':
+                        queryParams.sortedByTrainNumberAsc = true;
+                        break;
+                    case 'numberDesc':
+                        queryParams.sortedByTrainNumberAsc = false;
+                        break;
+                    case 'durationAsc':
+                        queryParams.sortedByDurationAsc = true;
+                        break;
+                    case 'durationDesc':
+                        queryParams.sortedByDurationAsc = false;
+                        break;
+                    case 'departureTimeAsc':
+                        queryParams.sortedByDepartureTimeAsc = true;
+                        break;
+                    case 'departureTimeDesc':
+                        queryParams.sortedByDepartureTimeAsc = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return {
+                format: format,
+                queryParams: queryParams
+            };
+        }
+    }
 });
+
+

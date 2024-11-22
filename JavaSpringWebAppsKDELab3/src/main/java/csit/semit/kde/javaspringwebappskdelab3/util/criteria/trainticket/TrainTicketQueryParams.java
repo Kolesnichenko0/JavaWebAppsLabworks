@@ -1,7 +1,10 @@
 package csit.semit.kde.javaspringwebappskdelab3.util.criteria.trainticket;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import csit.semit.kde.javaspringwebappskdelab3.entity.trainticket.Ticket;
 import csit.semit.kde.javaspringwebappskdelab3.entity.trainticket.TrainTicket;
+import csit.semit.kde.javaspringwebappskdelab3.util.criteria.train.TrainQueryParams;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -46,6 +49,7 @@ import java.time.LocalTime;
  */
 @Getter
 @ToString
+@JsonDeserialize(builder = TrainTicketQueryParams.Builder.class)
 public class TrainTicketQueryParams {
     private String searchingPassengerSurname;
     private String searchingPassportNumber;
@@ -69,9 +73,11 @@ public class TrainTicketQueryParams {
     public boolean isEmpty() {
         return searchingPassengerSurname == null && searchingPassportNumber == null &&
                 searchingCarriageNumber == null && searchingDepartureDate == null &&
-                filteringDepartureDateFrom == null && filteringDepartureDateTo == null;
+                filteringDepartureDateFrom == null && filteringDepartureDateTo == null &&
+                searchingTrainId == null;
     }
 
+    @JsonPOJOBuilder(withPrefix = "")
     public static class Builder {
         private String searchingPassengerSurname;
         private String searchingPassportNumber;

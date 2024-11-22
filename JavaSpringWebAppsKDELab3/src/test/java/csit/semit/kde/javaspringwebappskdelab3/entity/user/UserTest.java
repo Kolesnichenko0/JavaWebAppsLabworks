@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @see Role
  * @see UserFieldName
  * @since 1.0.0
+ * @author Kolesnychenko Denys Yevhenovych
  */
 class UserTest {
 

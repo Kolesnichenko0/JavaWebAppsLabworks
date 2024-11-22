@@ -1,7 +1,6 @@
 package csit.semit.kde.javaspringwebappskdelab3.service.user;
+
 import csit.semit.kde.javaspringwebappskdelab3.dto.user.UserDTO;
-import csit.semit.kde.javaspringwebappskdelab3.enums.user.Role;
-import csit.semit.kde.javaspringwebappskdelab3.service.user.UserService;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.service.ServiceResult;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.service.ServiceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,60 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+/**
+ * Custom implementation of {@link UserDetailsService} for loading user-specific data.
+ * <p>
+ * This service provides functionality to load user details by username or email for authentication purposes.
+ * It interacts with the {@link UserService} to retrieve user information and constructs a {@link UserDetails} object.
+ * </p>
+ * <p>
+ * The `CustomUserDetailsService` class includes:
+ * <ul>
+ *   <li>Dependency injection of {@link UserService} to access user data.</li>
+ *   <li>Method to load user details by username or email, throwing {@link UsernameNotFoundException} if the user is not found.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Example usage:
+ * <pre>
+ * {@code
+ * @Autowired
+ * private CustomUserDetailsService customUserDetailsService;
+ *
+ * public void someMethod() {
+ *     UserDetails userDetails = customUserDetailsService.loadUserByUsername("usernameOrEmail");
+ *     // Use the userDetails object
+ * }
+ * }
+ * </pre>
+ * </p>
+ * <p>
+ * Dependencies:
+ * <ul>
+ *   <li>{@link UserService}</li>
+ *   <li>{@link UserDTO}</li>
+ *   <li>{@link ServiceResult}</li>
+ *   <li>{@link ServiceStatus}</li>
+ *   <li>{@link UserDetails}</li>
+ *   <li>{@link UsernameNotFoundException}</li>
+ *   <li>{@link User}</li>
+ * </ul>
+ * </p>
+ * <p>
+ * This class is annotated with {@link Service} to indicate that it's a Spring service component.
+ * </p>
+ *
+ * @author Kolesnychenko
+ * Denys Yevhenovych CS-222a
+ * @see UserService
+ * @see UserDTO
+ * @see ServiceResult
+ * @see ServiceStatus
+ * @see UserDetails
+ * @see UsernameNotFoundException
+ * @see User
+ * @since 1.0.0
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;

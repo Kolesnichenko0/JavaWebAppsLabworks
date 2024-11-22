@@ -4,6 +4,8 @@ import {validateCarriageNumber, validatePassportNumber, validatePassengerSurname
 
 document.addEventListener('DOMContentLoaded', () => {
     const contextPath = document.querySelector('base').href.replace(/\/$/, '');
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
     const isForSpecificTrain = window.location.pathname.includes('/trains/');
     const pathParts = window.location.pathname.split('/');
     const currentTrainId = isForSpecificTrain ? pathParts[pathParts.length - 2] : null;
@@ -22,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetFiltersBtn = document.getElementById('resetFiltersBtn');
     const currentStatusElement = document.getElementById('currentStatus');
     const createTicketBtn = document.getElementById('createTicketBtn');
+    const exportTicketsBtn = document.getElementById('exportTicketsBtn');
+    const exportTicketsForm = document.getElementById('exportTicketsForm');
+    const exportTicketsAlert = document.getElementById('exportTicketsAlert');
 
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -57,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         goToTrainBtn.addEventListener('click', () => {
             window.location.href = `${contextPath}/trains/${currentTrainId}`;
         });
-        if(createTicketBtn) {
+        if (createTicketBtn) {
             createTicketBtn.addEventListener('click', () => {
                 const trainNumber = document.getElementById('trainNumber').textContent;
                 window.location.href = `${contextPath}/train-tickets/create?trainNumber=${trainNumber}`;
@@ -347,4 +352,116 @@ document.addEventListener('DOMContentLoaded', () => {
     displayCurrentSearch();
     displayCurrentFilter();
     fetchTickets();
+
+    if (exportTicketsForm) {
+        exportTicketsForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            clearErrors();
+
+            const exportFormat = document.getElementById('exportTicketsFormat').value;
+
+            const currentUrlParams = new URLSearchParams(window.location.search);
+
+            const exportRequest = buildTrainTicketExportRequestDTO(exportFormat, currentUrlParams);
+
+            const apiEndpoint = isForSpecificTrain && currentTrainId
+                ? `${contextPath}/api/trains/${currentTrainId}/tickets/export`
+                : `${contextPath}/api/train-tickets/export`;
+
+            fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify(exportRequest)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        if (response.status === 204) {
+                            alert('Export failed: No data to export.');
+                        } else {
+                            exportTicketsAlert.classList.remove('d-none');
+                            exportTicketsAlert.classList.add('show');
+                            const exportModalElement = document.getElementById('exportTicketsModal');
+                            const exportModal = bootstrap.Modal.getInstance(exportModalElement);
+                            exportModal.hide();
+                        }
+                    } else {
+                        return response.json().then(data => {
+                            const errorMessage = data.message || 'Export failed.';
+                            alert(`Error: ${errorMessage}`);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during export:', error);
+                    alert('An error occurred while exporting data.');
+                });
+        });
+
+        function buildTrainTicketExportRequestDTO(format, urlParams) {
+            const queryParams = {};
+
+            // Common filters
+            if (urlParams.has('qPassengerSurname')) {
+                queryParams.searchingPassengerSurname = urlParams.get('qPassengerSurname');
+            }
+            if (urlParams.has('qPassengerPassportNumber')) {
+                queryParams.searchingPassportNumber = urlParams.get('qPassengerPassportNumber');
+            }
+            if (urlParams.has('qDepartureDate')) {
+                queryParams.searchingDepartureDate = urlParams.get('qDepartureDate');
+            }
+            if (urlParams.has('qCarriageNumber')) {
+                queryParams.searchingCarriageNumber = parseInt(urlParams.get('qCarriageNumber'), 10);
+            }
+
+            // Filters
+            if (urlParams.has('fDepartureDateFrom')) {
+                queryParams.filteringDepartureDateFrom = urlParams.get('fDepartureDateFrom');
+            }
+            if (urlParams.has('fDepartureDateTo')) {
+                queryParams.filteringDepartureDateTo = urlParams.get('fDepartureDateTo');
+            }
+
+            // Sorting
+            if (urlParams.has('sortBy')) {
+                const sortBy = urlParams.get('sortBy');
+                switch (sortBy) {
+                    case 'numberAsc':
+                        queryParams.sortedByPassengerSurnameAsc = true;
+                        break;
+                    case 'numberDesc':
+                        queryParams.sortedByPassengerSurnameAsc = false;
+                        break;
+                    case 'durationAsc':
+                        queryParams.sortedByDurationAsc = true;
+                        break;
+                    case 'durationDesc':
+                        queryParams.sortedByDurationAsc = false;
+                        break;
+                    case 'departureTimeAsc':
+                        queryParams.sortedByDepartureTimeAsc = true;
+                        break;
+                    case 'departureTimeDesc':
+                        queryParams.sortedByDepartureTimeAsc = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (isForSpecificTrain && currentTrainId) {
+                queryParams.searchingTrainId = currentTrainId;
+            }
+
+            return {
+                format: format,
+                queryParams: queryParams
+            };
+        }
+    }
 });
+

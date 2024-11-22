@@ -2,6 +2,8 @@ package csit.semit.kde.javaspringwebappskdelab3.controller.trainticket;
 
 import csit.semit.kde.javaspringwebappskdelab3.controller.EntityBaseRestController;
 import csit.semit.kde.javaspringwebappskdelab3.dto.trainticket.TrainTicketDTO;
+import csit.semit.kde.javaspringwebappskdelab3.dto.trainticket.TrainTicketExportRequestDTO;
+import csit.semit.kde.javaspringwebappskdelab3.service.trainticket.TrainTicketExportService;
 import csit.semit.kde.javaspringwebappskdelab3.service.trainticket.TrainTicketService;
 import csit.semit.kde.javaspringwebappskdelab3.util.criteria.trainticket.TrainTicketQueryParams;
 import csit.semit.kde.javaspringwebappskdelab3.util.result.controller.ErrorResponse;
@@ -12,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -113,9 +116,12 @@ import java.util.Map;
 public class TrainTicketRestControllerEntity extends EntityBaseRestController<TrainTicketDTO> {
     private final TrainTicketService trainTicketService;
 
+    private final TrainTicketExportService trainTicketExportService;
+
     @Autowired
-    public TrainTicketRestControllerEntity(TrainTicketService trainTicketService) {
+    public TrainTicketRestControllerEntity(TrainTicketService trainTicketService, TrainTicketExportService trainTicketExportService) {
         this.trainTicketService = trainTicketService;
+        this.trainTicketExportService = trainTicketExportService;
     }
 
     @Override
@@ -183,5 +189,13 @@ public class TrainTicketRestControllerEntity extends EntityBaseRestController<Tr
     public ResponseEntity<?> updatePartial(@PathVariable Long id, @RequestBody Map<String, Object> updates, HttpServletRequest request) {
         ServiceResult<TrainTicketDTO> result = trainTicketService.updatePartial(id, updates);
         return ServiceResultHandler.handleServiceResult(result);
+    }
+
+    @PostMapping("/export")
+    public ResponseEntity<?> exportTrainTickets(@RequestBody TrainTicketExportRequestDTO request,
+                                                Authentication authentication) {
+        String username = authentication.getName();
+        ServiceResult<TrainTicketDTO> exportResult = trainTicketExportService.exportAndSendTrainTickets(request, null, username);
+        return ServiceResultHandler.handleServiceResult(exportResult);
     }
 }
