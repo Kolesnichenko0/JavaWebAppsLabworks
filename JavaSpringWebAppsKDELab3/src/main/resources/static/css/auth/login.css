@@ -11,3 +11,14 @@ body {
 .input-custom {
     background-color: #f1f1f1;
 }
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #343a40;
+    border-color: #343a40;
+}
+.custom-checkbox .custom-control-label::before {
+    border-radius: 0.25rem;
+}
+.custom-checkbox .custom-control-label {
+    color: #17a2b8;
+}

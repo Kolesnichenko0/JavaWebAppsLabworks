@@ -1,9 +1,11 @@
 package csit.semit.kde.javaspringwebappskdelab3.config;
 
 import csit.semit.kde.javaspringwebappskdelab3.enums.user.Role;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -59,10 +61,12 @@ import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 @EnableWebSecurity
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private final Dotenv dotenv;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, Environment env) {
         this.userDetailsService = userDetailsService;
+        this.dotenv = Dotenv.configure().ignoreIfMissing().load();
     }
 
     @Bean
@@ -141,7 +145,12 @@ public class SecurityConfig {
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false)
                         .expiredUrl("/login?sessionInvalidated=true")
-                );
+                )
+                .rememberMe(rememberMe -> rememberMe
+                        .key(dotenv.get("REMEMBER_ME_SECRET_KEY"))
+                        .tokenValiditySeconds(7 * 24 * 60 * 60)
+                        .rememberMeParameter("remember-me")
+                        .userDetailsService(userDetailsService));
 
         return http.build();
     }
